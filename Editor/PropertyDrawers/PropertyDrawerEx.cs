@@ -26,11 +26,31 @@ namespace UnityUtils.Editor
 		{
 			return EditorGUI.IndentedRect(position);
 		}
+		public static Rect RichLabelField(Rect position, GUIContent content)
+		{
+			GUIStyle style = RichLabel;
+			float height = style.CalcHeight(content, position.width);
+			position = position.SetHeight(height);
+			EditorGUI.LabelField(position, content, style);
+			return position;
+		}
 		public static float Spacing => EditorGUIUtility.standardVerticalSpacing * 2;
 		public static float LineHeight => EditorGUIUtility.singleLineHeight;
 		public static float SpacedLineHeight => LineHeight + EditorGUIUtility.standardVerticalSpacing;
 		public static float FieldWidth => EditorGUIUtility.fieldWidth;
 		public static float ViewWidth => EditorGUIUtility.currentViewWidth;
+		public static GUIStyle RichLabel = new GUIStyle()
+		{
+			normal = new GUIStyleState()
+			{
+				textColor = Color.white,
+			},
+			alignment = TextAnchor.UpperLeft,
+			fixedHeight = 0, fixedWidth = 0,
+			wordWrap = true, richText = true,
+			stretchWidth = false,
+			stretchHeight = false,
+		};
 
 		public static Vector2 CalcLabelSize(string content)
 		{
