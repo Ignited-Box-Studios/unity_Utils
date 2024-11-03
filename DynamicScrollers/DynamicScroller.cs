@@ -17,7 +17,6 @@ namespace UnityUtils.DynamicScrollers
 		[SerializeField] private Cells cells;
 		[SerializeField] private ContentComponents contentComponents;
 
-		[SerializeReference, Polymorphic]
 		private IScrollerCellData[] _data;
 		public IScrollerCellData[] Data
 		{
@@ -32,6 +31,12 @@ namespace UnityUtils.DynamicScrollers
 		}
 
 		public Axis ScrollAxis => vertical ? Axis.Vertical : Axis.Horizontal;
+
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			ReloadCells();
+		}
 
 		public void ReloadCells()
 		{
@@ -50,7 +55,7 @@ namespace UnityUtils.DynamicScrollers
 				ClearCell(cell);
 			}
 
-			if (contentComponents.Sizing == ContentComponents.SizingType.OnReload)
+			if (count > 0 && contentComponents.Sizing == ContentComponents.SizingType.OnReload)
 			{
 				Vector2 size = contentComponents.Layout.GetContentSize(ScrollAxis, viewport);
 				SetContentSize(size);

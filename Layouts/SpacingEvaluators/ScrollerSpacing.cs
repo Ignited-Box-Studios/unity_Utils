@@ -12,10 +12,14 @@ namespace UnityUtils.Layouts.SpacingEvaluators
 		[SerializeField] private RectTransform container;
 		[SerializeField] private Axis axis;
 		[SerializeField] private float ratio;
+		[SerializeField] private bool shrinkGridSize;
 
 		public Vector3 GetSpacing(int count, WorldGridLayout layout)
 		{
-			Vector3Int grid = layout.GetFittingGridSize(count);
+			Vector3Int minGridSize = layout.GridSize;
+			int MinCellCount() => minGridSize.x * minGridSize.y * minGridSize.z;
+
+			Vector3Int grid = shrinkGridSize || count > MinCellCount() ? layout.GetFittingGridSize(count) : minGridSize;
 			Vector2 size = container.rect.size;
 
 			return axis switch

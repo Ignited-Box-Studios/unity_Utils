@@ -143,6 +143,10 @@ namespace UnityUtils.AddressableUtils
 			if (handle is not AsyncOperationHandle<K> result)
 			{
 				result = Addressables.LoadAssetAsync<K>(prefabReference.RuntimeKey);
+
+				if (!result.IsValid())
+					throw new InvalidKeyException(prefabReference.RuntimeKey, typeof(K));
+
 				handle = result;
 			}
 
