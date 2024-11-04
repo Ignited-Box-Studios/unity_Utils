@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.VFX;
+using Utils.Delegates;
 
 namespace UnityUtils.Effects.VisualEffects
 {
 	public static class ParticlesPropertiesUtils
 	{
-		private static readonly Dictionary<Type, IPropertyDelegates> delegates = new()
+		private static readonly Dictionary<Type, IPropertyDelegate> delegates = new()
 		{
 			/* Need to be defined properly.
 			[typeof(Color)] = new PropertyDelegates<ParticleSystem, Color>(
@@ -71,7 +70,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<ParticleSystem, T>();
+				var prop = delegates.GetIdProperty<ParticleSystem, T>();
 				value = prop.Get(comp, id);
 				return true;
 			}
@@ -97,7 +96,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<ParticleSystem, T>();
+				var prop = delegates.GetIdProperty<ParticleSystem, T>();
 				prop.Set(comp, id, value);
 				return true;
 			}

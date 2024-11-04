@@ -10,7 +10,7 @@ namespace UnityUtils.Editor.SerializedProperties
 	{
 		private const BindingFlags BindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance |
 			BindingFlags.Static | BindingFlags.FlattenHierarchy;
-		private const string backingField = "<{0}>k__BackingField";
+		public const string backingField = "<{0}>k__BackingField";
 
 		public static bool IsBoxedValueValid(this SerializedProperty prop)
 		{

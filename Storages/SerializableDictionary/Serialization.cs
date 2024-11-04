@@ -13,6 +13,7 @@ namespace Serialized
 			[field: SerializeField]
 			public TKey Key { get; set; }
 
+			[SerializeField]
 			public TValue Value;
 		}
 

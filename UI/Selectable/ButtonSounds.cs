@@ -29,6 +29,9 @@ namespace UnityUtils.UI.Selectable
 
 		public readonly void DoStateTransition(ButtonState state, bool animate)
 		{
+			if (!button.gameObject.activeSelf)
+				return;
+
 			AudioClip clip = sources[state];
 			if (!clip)
 				return;

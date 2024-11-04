@@ -1,46 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.VFX;
+using Utils.Delegates;
 
 namespace UnityUtils.Effects.VisualEffects
 {
 	public static class MaterialPropertiesUtils
 	{
-		private static readonly Dictionary<Type, IPropertyDelegates> delegates = new()
+		private static readonly Dictionary<Type, IPropertyDelegate> delegates = new()
 		{
-			[typeof(Color)] = new PropertyDelegates<Material, Color>(
+			[typeof(Color)] = new IdProperty<Material, Color>(
 				(comp, id) => comp.HasColor(id),
 				(comp, id) => comp.GetColor(id),
 				(comp, id, value) => comp.SetColor(id, value)
 				),
-			[typeof(float)] = new PropertyDelegates<Material, float>(
+			[typeof(float)] = new IdProperty<Material, float>(
 				(comp, id) => comp.HasFloat(id),
 				(comp, id) => comp.GetFloat(id),
 				(comp, id, value) => comp.SetFloat(id, value)
 				),
-			[typeof(int)] = new PropertyDelegates<Material, int>(
+			[typeof(int)] = new IdProperty<Material, int>(
 				(comp, id) => comp.HasInt(id),
 				(comp, id) => comp.GetInt(id),
 				(comp, id, value) => comp.SetInt(id, value)
 				),
-			[typeof(bool)] = new PropertyDelegates<Material, bool>(
+			[typeof(bool)] = new IdProperty<Material, bool>(
 				(comp, id) => comp.HasInt(id),
 				(comp, id) => comp.GetInt(id) == 0 ? false : true,
 				(comp, id, value) => comp.SetInt(id, value ? 1 : 0)
 				),
-			[typeof(Vector2)] = new PropertyDelegates<Material, Vector2>(
+			[typeof(Vector2)] = new IdProperty<Material, Vector2>(
 				(comp, id) => comp.HasVector(id),
 				(comp, id) => comp.GetVector(id),
 				(comp, id, value) => comp.SetVector(id, value)
 				),
-			[typeof(Vector3)] = new PropertyDelegates<Material, Vector3>(
+			[typeof(Vector3)] = new IdProperty<Material, Vector3>(
 				(comp, id) => comp.HasVector(id),
 				(comp, id) => comp.GetVector(id),
 				(comp, id, value) => comp.SetVector(id, value)
 				),
-			[typeof(Vector4)] = new PropertyDelegates<Material, Vector4>(
+			[typeof(Vector4)] = new IdProperty<Material, Vector4>(
 				(comp, id) => comp.HasVector(id),
 				(comp, id) => comp.GetVector(id),
 				(comp, id, value) => comp.SetVector(id, value)
@@ -74,7 +73,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<Material, T>();
+				var prop = delegates.GetIdProperty<Material, T>();
 				value = prop.Get(comp, id);
 				return true;
 			}
@@ -100,7 +99,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<Material, T>();
+				var prop = delegates.GetIdProperty<Material, T>();
 				prop.Set(comp, id, value);
 				return true;
 			}

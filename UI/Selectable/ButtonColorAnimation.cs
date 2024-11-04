@@ -20,7 +20,7 @@ namespace UnityUtils.UI.Selectable
 
 		public void DoStateTransition(ButtonState state, bool animate)
 		{
-			if (!graphic)
+			if (!graphic || !graphic.isActiveAndEnabled)
 				return;
 
 			if (isGroupSelected && state is ButtonState.Normal or ButtonState.Selected)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils.Delegates;
 
 namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 {
@@ -12,11 +13,11 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 
 	public abstract class ParameterFunctions<TComponent> : IParameterFunctions<TComponent>
 	{
-		private readonly Dictionary<int, IPropertyDelegates> delegates = new();
+		private readonly Dictionary<int, IPropertyDelegate> delegates = new();
 
 		protected virtual bool ThrowExceptions => true;
 
-		protected IPropertyDelegates this[string name]
+		protected IPropertyDelegate this[string name]
 		{
 			get
 			{
@@ -28,7 +29,7 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 				this[Shader.PropertyToID(name)] = value;
 			}
 		}
-		protected IPropertyDelegates this[int id]
+		protected IPropertyDelegate this[int id]
 		{
 			get
 			{
@@ -40,9 +41,9 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 			}
 		}
 
-		protected PropertyDelegates<TComponent, TValue> GetDelegate<TValue>(int id, bool isOptional = false)
+		protected IdProperty<TComponent, TValue> GetDelegate<TValue>(int id, bool isOptional = false)
 		{
-			if (!delegates.TryGetValue(id, out IPropertyDelegates propertyDelegates))
+			if (!delegates.TryGetValue(id, out IPropertyDelegate propertyDelegates))
 				propertyDelegates = GetMissinDelegates<TValue>();
 
 			if (propertyDelegates == null)
@@ -52,7 +53,7 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 				return null;
 			}
 
-			if (propertyDelegates is not PropertyDelegates<TComponent, TValue> dgt)
+			if (propertyDelegates is not IdProperty<TComponent, TValue> dgt)
 			{
 				var exception = new Exception($"Property Delegate {propertyDelegates?.GetType()} is not of type {typeof(TValue)}");
 				OnException(isOptional, exception);
@@ -62,7 +63,7 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 			return dgt;
 		}
 
-		protected virtual IPropertyDelegates GetMissinDelegates<TValue>()
+		protected virtual IPropertyDelegate GetMissinDelegates<TValue>()
 		{
 			return null;
 		}
@@ -78,12 +79,12 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 
 		public virtual T GetValue<T>(TComponent component, int id)
 		{
-			PropertyDelegates<TComponent, T> propDelegates = GetDelegate<T>(id);
+			IdProperty<TComponent, T> propDelegates = GetDelegate<T>(id);
 			return propDelegates == null ? default : propDelegates.Get(component, id);
 		}
 		public virtual void SetValue<T>(TComponent component, int id, T value, bool isOptional = false)
 		{
-			PropertyDelegates<TComponent, T> propDelegates = GetDelegate<T>(id, isOptional);
+			IdProperty<TComponent, T> propDelegates = GetDelegate<T>(id, isOptional);
 			propDelegates?.Set(component, id, value);
 		}
 	}

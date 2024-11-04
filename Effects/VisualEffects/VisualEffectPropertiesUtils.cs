@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
+using Utils.Delegates;
 
 namespace UnityUtils.Effects.VisualEffects
 {
 	public static class VisualEffectPropertiesUtils
 	{
-		private static readonly Dictionary<Type, IPropertyDelegates> delegates = new()
+		private static readonly Dictionary<Type, IPropertyDelegate> delegates = new()
 		{
-			[typeof(Gradient)] = new PropertyDelegates<VisualEffect, Gradient>(
+			[typeof(Gradient)] = new IdProperty<VisualEffect, Gradient>(
 				(comp, id) => comp.HasGradient(id),
 				(comp, id) => comp.GetGradient(id),
 				(comp, id, value) => comp.SetGradient(id, value)
 				),
-			[typeof(float)] = new PropertyDelegates<VisualEffect, float>(
+			[typeof(float)] = new IdProperty<VisualEffect, float>(
 				(comp, id) => comp.HasFloat(id),
 				(comp, id) => comp.GetFloat(id),
 				(comp, id, value) => comp.SetFloat(id, value)
 				),
-			[typeof(int)] = new PropertyDelegates<VisualEffect, int>(
+			[typeof(int)] = new IdProperty<VisualEffect, int>(
 				(comp, id) => comp.HasInt(id),
 				(comp, id) => comp.GetInt(id),
 				(comp, id, value) => comp.SetInt(id, value)
 				),
-			[typeof(Vector2)] = new PropertyDelegates<VisualEffect, Vector2>(
+			[typeof(Vector2)] = new IdProperty<VisualEffect, Vector2>(
 				(comp, id) => comp.HasVector2(id),
 				(comp, id) => comp.GetVector2(id),
 				(comp, id, value) => comp.SetVector2(id, value)
 				),
-			[typeof(Vector3)] = new PropertyDelegates<VisualEffect, Vector3>(
+			[typeof(Vector3)] = new IdProperty<VisualEffect, Vector3>(
 				(comp, id) => comp.HasVector3(id),
 				(comp, id) => comp.GetVector3(id),
 				(comp, id, value) => comp.SetVector3(id, value)
 				),
-			[typeof(Vector4)] = new PropertyDelegates<VisualEffect, Vector4>(
+			[typeof(Vector4)] = new IdProperty<VisualEffect, Vector4>(
 				(comp, id) => comp.HasVector4(id),
 				(comp, id) => comp.GetVector4(id),
 				(comp, id, value) => comp.SetVector4(id, value)
 				),
-			[typeof(SkinnedMeshRenderer)] = new PropertyDelegates<VisualEffect, SkinnedMeshRenderer>(
+			[typeof(SkinnedMeshRenderer)] = new IdProperty<VisualEffect, SkinnedMeshRenderer>(
 				(comp, id) => comp.HasSkinnedMeshRenderer(id),
 				(comp, id) => comp.GetSkinnedMeshRenderer(id),
 				(comp, id, value) => comp.SetSkinnedMeshRenderer(id, value)
@@ -74,7 +74,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<VisualEffect, T>();
+				var prop = delegates.GetIdProperty<VisualEffect, T>();
 				value = prop.Get(vfx, id);
 				return true;
 			}
@@ -100,7 +100,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			try
 			{
-				var prop = delegates.GetDelegates<VisualEffect, T>();
+				var prop = delegates.GetIdProperty<VisualEffect, T>();
 				prop.Set(vfx, id, value);
 				return true;
 			}
