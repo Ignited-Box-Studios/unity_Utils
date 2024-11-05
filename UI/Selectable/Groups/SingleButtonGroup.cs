@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Utils.Collections;
 
@@ -19,7 +20,10 @@ namespace UnityUtils.UI.Selectable.Groups
 		}
 
 		[SerializeField]
-		private Button[] buttons;
+		private List<Button> buttons;
+
+		[SerializeField]
+		private bool canDeselect = true;
 
 		public event SelectionChangedDelegate OnSelectionChanged;
 
@@ -27,11 +31,20 @@ namespace UnityUtils.UI.Selectable.Groups
 
 		public void Init()
 		{
-			for (int i = 0; i < buttons.Length; i++)
+			for (int i = 0; i < buttons.Count; i++)
 			{
 				Button button = buttons[i];
 				button.Group = this;
 			}
+		}
+
+		public void Add(Button input)
+		{
+			if (buttons.Contains(input))
+				return;
+
+			buttons.Add(input);
+			input.Group = this;
 		}
 
 		public void Select(ISelectableInput input)
@@ -50,7 +63,7 @@ namespace UnityUtils.UI.Selectable.Groups
 
 		public void Deselect(ISelectableInput input)
 		{
-			if (input != ActiveInput) return;
+			if (!canDeselect || input != ActiveInput) return;
 			ActiveInput?.OnGroupDeselected();
 			ActiveInput = null;
 			OnSelectionChanged?.Invoke();

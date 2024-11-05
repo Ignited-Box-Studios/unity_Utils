@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityUtils.GameObjects
 {
 	public static class GameObjectEx
 	{
+
 		public static void DestroySelf(this Object obj, float delay = 0)
 		{
 			if (!obj) return;
