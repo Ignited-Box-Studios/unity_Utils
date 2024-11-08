@@ -15,6 +15,9 @@ namespace UnityUtils.Layouts.RectLayout
 
 		public Rect GetRectLayout(Rect offset, RectTransform parent, bool animate)
 		{
+			if (!isActiveAndEnabled)
+				return offset;
+
 			return settings.GetRectLayout(offset, parent, animate);
 		}
 	}

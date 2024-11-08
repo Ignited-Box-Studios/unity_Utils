@@ -33,6 +33,7 @@ namespace UnityUtils.RectUtils
 		{
 			return transform.rect.size;
 		}
+
 		public static float GetSizeWithCurrentAnchors(this RectTransform transform, RectTransform.Axis axis, float size)
 		{
 			if (transform.parent is not RectTransform parent)
@@ -41,14 +42,14 @@ namespace UnityUtils.RectUtils
 			return size - parent.GetSize()[(int)axis] * (transform.anchorMax[(int)axis] - transform.anchorMin[(int)axis]);
 		}
 
-		public static Vector2 GetDeltaWithAnchors(this RectTransform transform, Rect rect, bool getWidth, bool getHeight)
+		public static Vector2 GetDeltaWithAnchors(this RectTransform transform, Rect rect, bool getWidth = true, bool getHeight = true)
 		{
 			Vector2 delta = transform.sizeDelta;
 			float width = getWidth ? transform.GetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rect.width) : delta.x;
 			float height = getHeight ? transform.GetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rect.height) : delta.y;
 			return new Vector2(width, height);
 		}
-		public static void SetRect(this RectTransform transform, Rect rect, bool setWidth, bool setHeight)
+		public static void SetRect(this RectTransform transform, Rect rect, bool setWidth = true, bool setHeight = true)
 		{
 			if (setWidth)
 			{

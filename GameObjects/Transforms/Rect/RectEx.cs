@@ -36,7 +36,6 @@ namespace UnityUtils.RectUtils
 				Mathf.Max(origin.xMax, child.xMax),
 				Mathf.Max(origin.yMax, child.yMax)
 			);
-		} 
-
+		}
 	}
 }

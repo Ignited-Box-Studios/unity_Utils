@@ -7,6 +7,11 @@ namespace UnityUtils.Layouts.RectLayout
 	{
 		[SerializeField] private float ratio;
 
+		protected override void OnSetEnabled(bool enabled)
+		{
+			gameObject.SetActive(enabled);
+		}
+
 		protected override Rect GetHorizontalRectLayout(Rect offset, RectTransform parent)
 		{
 			Rect parentRect = parent.rect;
@@ -15,7 +20,6 @@ namespace UnityUtils.Layouts.RectLayout
 					ratio.GetWidthFromHeight(parentRect.height), parentRect.height
 				);
 		}
-
 		protected override Rect GetVerticalRectLayout(Rect offset, RectTransform parent)
 		{
 			Rect parentRect = parent.rect;

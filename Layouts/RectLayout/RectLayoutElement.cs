@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityUtils.RectUtils;
 using UnityUtils.UI.Selectable;
 using Utils.Logger;
 
 namespace UnityUtils.Layouts.RectLayout
 {
-	public abstract class RectLayoutElement : MonoBehaviour, IRectLayoutElement
+	public abstract class RectLayoutElement : MonoBehaviour, IAnimatedRectLayoutElement
 	{
-		[SerializeField] private RectTransform.Axis axis;
-		[SerializeField] private Vector2Int direction;
+		public RectTransform Transform => transform as RectTransform;
+		[field: SerializeField] public RectTransform.Axis Axis { get; private set; }
+		[field: SerializeField] public Vector2Int OffsetDirection { get; private set; }
 
 		[Header("Animation")]
-		[SerializeField] private float duration; 
-		private float resizeTime;
-		private Rect target;
+		[field: SerializeField] public float AnimationDuration { get; private set; }
+		public float AnimationTime { get; private set; }
+		public Rect TargetRect { get; private set; }
 
 		protected virtual void OnEnable() { }
 		protected virtual void OnDisable() { }
@@ -28,65 +30,46 @@ namespace UnityUtils.Layouts.RectLayout
 
 		public Rect GetRectLayout(Rect offset, RectTransform parent, bool animate)
 		{
-			target = axis switch
+			if (!isActiveAndEnabled)
+				return offset;
+
+			TargetRect = Axis switch
 			{
 				RectTransform.Axis.Horizontal => GetHorizontalRectLayout(offset, parent),
 				RectTransform.Axis.Vertical => GetVerticalRectLayout(offset, parent),
-				_ => throw new ArgumentOutOfRangeException(nameof(axis)),
+				_ => throw new ArgumentOutOfRangeException(nameof(Axis)),
 			};
 
 			if (animate)
 			{
-				AnimateAsync().LogException();
+				this.AnimateResizeAsync().LogException();
 			}
 			else
 			{
-				Set(transform as RectTransform);
+				SetRect(TargetRect);
 			}
 
-			return target;
+			return TargetRect;
 		}
 
 		protected abstract Rect GetVerticalRectLayout(Rect offset, RectTransform parent);
 		protected abstract Rect GetHorizontalRectLayout(Rect offset, RectTransform parent);
 
-		public async Task AnimateAsync()
+		public bool Next()
 		{
-			//Already running
-			if (resizeTime > 0)
-				return;
+			AnimationTime += Time.deltaTime;
+			bool hasNext = AnimationTime < AnimationDuration;
+			if (!hasNext)
+				AnimationTime = 0;
 
-			RectTransform transform = this.transform as RectTransform;
-
-			Vector2 startPos = transform.position;
-			Vector2 startSize = axis switch
-			{
-				RectTransform.Axis.Vertical => new Vector2(target.width, 0),
-				RectTransform.Axis.Horizontal => new Vector2(0, target.height),
-				_ => Vector2.zero,
-			};
-
-			while (resizeTime < duration)
-			{
-				float norm = resizeTime / duration;
-				if (!transform)
-					break;
-
-				transform.localPosition = Vector2.Lerp(startPos, target.position * direction, norm);
-				transform.sizeDelta = Vector2.Lerp(startSize, target.size, norm);
-
-				await Task.Yield();
-				resizeTime += Time.deltaTime;
-			}
-
-			Set(transform);
-			resizeTime = 0;
+			return hasNext;
 		}
 
-		private void Set(RectTransform transform)
+		public void SetRect(Rect rect)
 		{
-			transform.localPosition = target.position * direction;
-			transform.sizeDelta = target.size;
+			RectTransform transform = Transform;
+			transform.localPosition = rect.position * OffsetDirection;
+			transform.SetRect(rect);
 		}
 	}
 }

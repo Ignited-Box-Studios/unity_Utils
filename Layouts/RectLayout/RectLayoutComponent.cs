@@ -8,34 +8,33 @@ using Utils.Logger;
 namespace UnityUtils.Layouts.RectLayout
 {
 	[Serializable]
-	public class RectLayoutComponent : ILayoutComponent, IRectLayoutElement
+	public class RectLayoutComponent : ILayoutComponent, IAnimatedRectLayoutElement
 	{
-		[SerializeField]
-		private RectTransform transform;
+		[field: SerializeField] public RectTransform Transform { get; private set; }
+		[field: SerializeField] public RectTransform.Axis Axis { get; private set; }
 
 		[Header("Wrap Content")]
 		[SerializeField]private bool doWrapWidth;
 		[SerializeField]private bool doWrapHeight;
-		[SerializeField]private float resizeDuration;
-		private float resizeTime;
-		private Vector2 resizeTarget;
+		[field: SerializeField] public float AnimationDuration { get; private set; }
+		public float AnimationTime { get; private set; }
+		public Rect TargetRect { get; private set; }
 
 		private bool DoWrap => doWrapWidth || doWrapHeight;
 
-		public void Reload(Transform transformComponent, bool animate)
+		public void Reload(Transform parentTransform, bool animate)
 		{
-			if (transformComponent is not RectTransform transform)
+			if (parentTransform is not RectTransform parent)
 				return;
 
-			ReloadSize(default, transform, animate);
+			ReloadSize(default, parent, animate);
 		}
-
 		private Rect ReloadSize(Rect rect, RectTransform parent, bool animate)
 		{
-			int count = transform.childCount;
+			int count = Transform.childCount;
 			for (int i = 0; i < count; i++)
 			{
-				Transform child = transform.GetChild(i);
+				Transform child = Transform.GetChild(i);
 				if (child.TryGetComponent(out IRectLayoutElement element))
 				{
 					rect = element.GetRectLayout(rect, parent, animate);
@@ -47,44 +46,42 @@ namespace UnityUtils.Layouts.RectLayout
 			}
 
 			if (DoWrap)
-				Wrap(rect.Wrap(default(Rect)));
+				Wrap(rect.Wrap(default(Rect)), animate);
 
 			return rect;
 		}
-
 		public Rect GetRectLayout(Rect offset, RectTransform parent, bool animate)
 		{
 			return ReloadSize(offset, parent, animate);
 		}
-
-		private void Wrap(Rect wrap)
+		private void Wrap(Rect wrap, bool animate)
 		{
-			resizeTarget = transform.GetDeltaWithAnchors(wrap, doWrapWidth, doWrapHeight);
-			ResizeAsync().LogException();
+			TargetRect = wrap;
+
+			if (animate)
+			{
+				this.AnimateResizeAsync().LogException();
+			}
+			else
+			{
+				SetRect(TargetRect);
+			}
+		}
+		public bool Next()
+		{
+			AnimationTime += Time.deltaTime; 
+			bool hasNext = AnimationTime < AnimationDuration;
+			if (!hasNext)
+				AnimationTime = 0;
+
+			return hasNext;
 		}
 
-		private async Task ResizeAsync()
+		public void SetRect(Rect rect)
 		{
-			//Already running
-			if (resizeTime > 0)
-				return;
-
-			Vector2 start = transform.sizeDelta;
-
-			while (resizeTime < resizeDuration)
-			{
-				float norm = resizeTime / resizeDuration;
-				if (!transform)
-					break;
-
-				transform.sizeDelta = Vector2.Lerp(start, resizeTarget, norm);
-
-				await Task.Yield();
-				resizeTime += Time.deltaTime;
-			}
-
-			transform.sizeDelta = resizeTarget;
-			resizeTime = 0;
+			//Transform.localPosition = rect.position;
+			Vector2 size = Transform.GetDeltaWithAnchors(rect, doWrapWidth, doWrapHeight);
+			Transform.sizeDelta = size;
 		}
 	}
 }
