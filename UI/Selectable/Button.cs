@@ -26,7 +26,16 @@ namespace UnityUtils.UI.Selectable
 
 		[field: SerializeField]
 		public bool IsToggle { get; private set; }
-		public bool IsSelected => currentSelectionState == SelectionState.Selected || Group.IsActive(Id);
+		public bool IsSelected
+		{
+			get
+			{
+				return IsToggle ? actAsSelected : currentSelectionState == SelectionState.Selected || IsActiveGroupInput;
+			}
+		}
+
+		public bool IsActiveGroupInput => Group?.IsActive(Id) ?? false;
+		private bool actAsSelected;
 
 		[SerializeField] private TMP_Text label;
 		public string Text
@@ -83,18 +92,15 @@ namespace UnityUtils.UI.Selectable
 		}
 		public override void OnPointerClick(PointerEventData eventData)
 		{
+			if (IsToggle)
+				actAsSelected = !actAsSelected;
+
 			base.OnPointerClick(eventData);
 			PointerPressEvent?.Invoke(eventData);
 			Group?.Toggle(this);
-
-			if (!IsToggle)
-				OnDeselect(null);
 		}
 		protected override void DoStateTransition(SelectionState state, bool instant)
 		{
-			if (state == SelectionState.Selected && !IsToggle)
-				return;
-
 			base.DoStateTransition(state, instant);
 			ReloadAnimation(state, instant);
 		}
@@ -106,14 +112,23 @@ namespace UnityUtils.UI.Selectable
 
 		private void ReloadAnimation(SelectionState state, bool instant)
 		{
-			UpdateAnimations(state switch
-			{
-				SelectionState.Highlighted => ButtonState.Highlighted,
-				SelectionState.Pressed => ButtonState.Pressed,
-				SelectionState.Selected => ButtonState.Selected,
-				SelectionState.Disabled => ButtonState.Disabled,
-				_ => ButtonState.Normal
-			}, !instant);
+			ButtonState bntState =
+				actAsSelected ? ButtonState.Selected :
+				state switch
+				{
+					SelectionState.Highlighted => ButtonState.Highlighted,
+					SelectionState.Pressed => ButtonState.Pressed,
+					SelectionState.Selected => 
+						IsActiveGroupInput ? ButtonState.GroupSelected :
+						IsToggle ? ButtonState.Normal : ButtonState.Selected,
+					SelectionState.Disabled => ButtonState.Disabled,
+					SelectionState.Normal => 
+						IsToggle && actAsSelected ? ButtonState.Selected :
+						Group != null ? ButtonState.GroupDeselected : ButtonState.Normal,
+					_ => throw new System.ArgumentOutOfRangeException(),
+				};
+
+			UpdateAnimations(bntState, !instant);
 		}
 
 		public virtual void OnGroupSelected() 

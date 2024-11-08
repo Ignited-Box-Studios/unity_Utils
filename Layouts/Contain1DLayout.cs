@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityUtils.Common.Layout
 {
-	public class Contain1DLayout : ILayoutController
+	public class Contain1DLayout : ILayoutComponent
 	{
 		private enum Axis
 		{
@@ -14,7 +14,7 @@ namespace UnityUtils.Common.Layout
 		[SerializeField] private Axis axis;
 		[SerializeField] private float spacing_mult;
 
-		public void Reload(Transform transform)
+		public void Reload(Transform transform, bool animate)
 		{
 			if (transform is not RectTransform rect)
 				return;

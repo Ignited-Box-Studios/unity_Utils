@@ -27,5 +27,16 @@ namespace UnityUtils.RectUtils
 		public static Rect Move(this Rect rect, float x, float y) => rect.SetPosition(rect.position + new Vector2(x, y));
 		public static Rect MoveX(this Rect rect, float x) => rect.Move(new Vector2(x, 0));
 		public static Rect MoveY(this Rect rect, float y) => rect.Move(new Vector2(0, y));
+
+		public static Rect Wrap(this Rect origin, Rect child)
+		{
+			return Rect.MinMaxRect(
+				Mathf.Min(origin.xMin, child.xMin),
+				Mathf.Min(origin.yMin, child.yMin),
+				Mathf.Max(origin.xMax, child.xMax),
+				Mathf.Max(origin.yMax, child.yMax)
+			);
+		} 
+
 	}
 }

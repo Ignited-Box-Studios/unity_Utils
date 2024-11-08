@@ -73,7 +73,7 @@ namespace UnityUtils.Editor.PropertyDrawers
 				Type type = polyAttr.GetFieldValue(index)?.GetType();
 				if (type != null)
 				{
-					label = new GUIContent(type.Name);
+					label = new GUIContent($"{label.text}: {type.Name}");
 					position = position.SetWidth(CalcLabelSize(label.text).x);
 				}
 			}

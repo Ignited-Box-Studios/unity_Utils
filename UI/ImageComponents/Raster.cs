@@ -9,7 +9,13 @@ namespace UnityUtils.UI.ImageComponents
 		[SerializeField] private Image image;
 
 		public bool IsAlive => image;
-		public RectTransform Transform => image.transform as RectTransform;
+		public RectTransform Transform => image.transform as RectTransform; 
+		
+		public bool Enabled
+		{
+			get => image.enabled;
+			set => image.enabled = false;
+		}
 		public Sprite OverrideSprite
 		{
 			get => image.overrideSprite;

@@ -177,10 +177,16 @@ namespace UnityUtils.Editor.SerializedProperties
 
 		private static object GetField(string name, object target)
 		{
-			Type type = target.GetType();
-			FieldInfo member = type.GetField(name, BindingAttr);
-
+			FieldInfo member = GetField(target.GetType(), name);
 			return member.GetValue(target);
+		}
+		private static FieldInfo GetField(Type type, string name)
+		{
+			if (type == null)
+				return null;
+
+			FieldInfo member = type.GetField(name, BindingAttr);
+			return member ?? GetField(type.BaseType, name);
 		}
 
 		private static object GetIndexed(string name, object target)
@@ -206,8 +212,17 @@ namespace UnityUtils.Editor.SerializedProperties
 			int end = name.IndexOf('>');
 			name = name[start..end];
 			Type type = target.GetType();
-			PropertyInfo member = type.GetProperty(name, BindingAttr);
+			PropertyInfo member = GetProperty(type, name);
 			return member.GetValue(target);
+		}
+
+		private static PropertyInfo GetProperty(Type type, string name)
+		{
+			if (type == null)
+				return null;
+
+			PropertyInfo prop = type.GetProperty(name, BindingAttr);
+			return prop ?? GetProperty(type.BaseType, name);
 		}
 	}
 }

@@ -5,6 +5,8 @@ namespace UnityUtils.UI.ImageComponents
 {
 	public interface IImageComponent
 	{
+		public bool IsAlive { get; }
+		public bool Enabled { get; set; }
 		RectTransform Transform { get; }
 		Sprite OverrideSprite { get; set; }
 		Sprite Sprite { get; set; }

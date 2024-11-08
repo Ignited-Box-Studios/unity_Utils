@@ -10,6 +10,12 @@ namespace UnityUtils.UI.ImageComponents
 
 		public bool IsAlive => image;
 		public RectTransform Transform => image.transform as RectTransform;
+
+		public bool Enabled
+		{
+			get => image.enabled;
+			set => image.enabled = value;
+		}
 		public Sprite OverrideSprite
 		{
 			get => isOverriden ? image.sprite : null;
@@ -22,6 +28,9 @@ namespace UnityUtils.UI.ImageComponents
 				}
 				else if (!value)
 				{
+					if (!isOverriden)
+						return;
+
 					isOverriden = false;
 					value = baseSprite;
 				}

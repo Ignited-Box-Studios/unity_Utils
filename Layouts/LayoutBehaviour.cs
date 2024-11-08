@@ -4,32 +4,15 @@ using UnityUtils.PropertyAttributes;
 namespace UnityUtils.Common.Layout
 {
 	[ExecuteInEditMode]
-	public class LayoutBehaviour : MonoBehaviour
+	public class LayoutBehaviour : LayoutController
 	{
 		[SerializeReference, Polymorphic]
-		private ILayoutController controller;
+		private ILayoutComponent controller;
 
-		private void OnValidate() 
+		public override void ReloadLayout(bool animate = false)
 		{
-			ReloadLayout();
-		}
-		private void OnEnable()
-		{
-			ReloadLayout();
-		}
-		private void OnTransformChildrenChanged()
-		{
-			ReloadLayout();
-		}
-
-		private void OnRectTransformDimensionsChange()
-		{
-			ReloadLayout();
-		}
-
-		public void ReloadLayout()
-		{
-			controller?.Reload(transform);
+			base.ReloadLayout(animate);
+			controller?.Reload(transform, animate);
 		}
 	}
 }

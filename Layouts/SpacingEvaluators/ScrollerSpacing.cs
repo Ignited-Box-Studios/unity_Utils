@@ -34,13 +34,13 @@ namespace UnityUtils.Layouts.SpacingEvaluators
 		private Vector2 HorizontalSize(Vector2 size, Vector3Int grid)
 		{
 			float singleCellHeight = size.y.SafeDivide(grid.y);
-			return new Vector2(singleCellHeight * ratio, singleCellHeight);
+			return new Vector2(ratio.GetWidthFromHeight(singleCellHeight), singleCellHeight);
 		}
 		private Vector2 VerticalSize(Vector2 size, Vector3Int grid)
 		{
 			//grid.x cell count occupy size.x width, therefore
 			float singleCellWidth = size.x.SafeDivide(grid.x);
-			float singleCellHeight = singleCellWidth.SafeDivide(ratio);
+			float singleCellHeight = ratio.GetHeightFromWidth(singleCellWidth);
 			return new Vector2(singleCellWidth, singleCellHeight);
 		}
 	}

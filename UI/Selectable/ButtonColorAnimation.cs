@@ -6,7 +6,7 @@ using UnityUtils.Storages.EnumPairLists;
 namespace UnityUtils.UI.Selectable
 {
 	[System.Serializable]
-	public struct ButtonColorAnimation : IButtonAnimations
+	public class ButtonColorAnimation : IButtonAnimations
 	{
 		[SerializeField]
 		private Graphic graphic;
