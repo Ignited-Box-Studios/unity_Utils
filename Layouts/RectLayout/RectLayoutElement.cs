@@ -23,7 +23,7 @@ namespace UnityUtils.Layouts.RectLayout
 
 		public void Toggle(Button button)
 		{
-			OnSetEnabled(enabled = !button.IsSelected);
+			OnSetEnabled(enabled = !button.IsOn);
 		}
 
 		protected virtual void OnSetEnabled(bool enabled) { }

@@ -19,7 +19,7 @@ namespace UnityUtils.UI.Selectable
 			bool isPressed = state is ButtonState.Selected or ButtonState.GroupSelected 
 				or ButtonState.Pressed or ButtonState.Highlighted;
 
-			if (back) back.enabled = !isPressed;
+			//if (back) back.enabled = !isPressed;
 			if (!front) return;
 
 			front.rectTransform.localPosition = isPressed ? Vector3.zero : offset * back.rectTransform.rect.size;

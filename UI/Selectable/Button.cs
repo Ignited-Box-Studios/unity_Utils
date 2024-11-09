@@ -26,14 +26,9 @@ namespace UnityUtils.UI.Selectable
 
 		[field: SerializeField]
 		public bool IsToggle { get; private set; }
-		public bool IsSelected
-		{
-			get
-			{
-				return IsToggle ? actAsSelected : currentSelectionState == SelectionState.Selected || IsActiveGroupInput;
-			}
-		}
+		public bool IsOn => actAsSelected || IsActiveGroupInput;
 
+		public bool HasGroup => Group != null;
 		public bool IsActiveGroupInput => Group?.IsActive(Id) ?? false;
 		private bool actAsSelected;
 
@@ -112,23 +107,29 @@ namespace UnityUtils.UI.Selectable
 
 		private void ReloadAnimation(SelectionState state, bool instant)
 		{
-			ButtonState bntState =
-				actAsSelected ? ButtonState.Selected :
-				state switch
-				{
-					SelectionState.Highlighted => ButtonState.Highlighted,
-					SelectionState.Pressed => ButtonState.Pressed,
-					SelectionState.Selected => 
-						IsActiveGroupInput ? ButtonState.GroupSelected :
-						IsToggle ? ButtonState.Normal : ButtonState.Selected,
-					SelectionState.Disabled => ButtonState.Disabled,
-					SelectionState.Normal => 
-						IsToggle && actAsSelected ? ButtonState.Selected :
-						Group != null ? ButtonState.GroupDeselected : ButtonState.Normal,
-					_ => throw new System.ArgumentOutOfRangeException(),
-				};
-
+			ButtonState bntState = GetButtonState(state);
 			UpdateAnimations(bntState, !instant);
+		}
+
+		public ButtonState GetButtonState() => GetButtonState(currentSelectionState);
+		private ButtonState GetButtonState(SelectionState state)
+		{
+			if (IsActiveGroupInput)
+				return ButtonState.GroupSelected;
+
+			if (actAsSelected)
+				return ButtonState.Selected;
+
+			return state switch
+			{
+				SelectionState.Highlighted => ButtonState.Highlighted,
+				SelectionState.Pressed => ButtonState.Pressed,
+				//If the button is actually selected, one of the previous if cases would be true;
+				SelectionState.Selected =>!IsOn ? ButtonState.Normal : ButtonState.Selected,
+				SelectionState.Disabled => ButtonState.Disabled,
+				SelectionState.Normal => HasGroup ? ButtonState.GroupDeselected : ButtonState.Normal,
+				_ => throw new System.ArgumentOutOfRangeException(),
+			};
 		}
 
 		public virtual void OnGroupSelected() 
