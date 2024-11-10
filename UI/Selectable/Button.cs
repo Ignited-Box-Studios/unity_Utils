@@ -26,11 +26,20 @@ namespace UnityUtils.UI.Selectable
 
 		[field: SerializeField]
 		public bool IsToggle { get; private set; }
+		public bool IsToggleSelected
+		{
+			get => actAsSelected;
+			set
+			{
+				actAsSelected = value;
+				ReloadAnimation(false);
+			}
+		}
 		public bool IsOn => actAsSelected || IsActiveGroupInput;
 
 		public bool HasGroup => Group != null;
 		public bool IsActiveGroupInput => Group?.IsActive(Id) ?? false;
-		private bool actAsSelected;
+		public bool actAsSelected;
 
 		[SerializeField] private TMP_Text label;
 		public string Text
