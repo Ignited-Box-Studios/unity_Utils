@@ -46,12 +46,15 @@ namespace UnityUtils.DynamicScrollers
 			int count = _data?.Length ?? 0;
 			for (int dataIndex = 0; dataIndex < count; dataIndex++)
 			{
-				cellIndex = ReloadAt(cellIndex, dataIndex);
+				if (ReloadAt(cellIndex, dataIndex))
+					cellIndex++;
 			}
 
-			for (; cellIndex < cells.Count; cellIndex++)
+			for (int i = cells.Count - 1; i >= cellIndex; i--)
 			{
-				if (!cells.RecycleCellAt(cellIndex, out IScrollerCell cell)) continue;
+				if (!cells.RecycleCellAt(i, out IScrollerCell cell)) 
+					continue;
+
 				ClearCell(cell);
 			}
 
@@ -72,7 +75,7 @@ namespace UnityUtils.DynamicScrollers
 			cell.SetData(data);
 			return true;
 		}
-		private int ReloadAt(int cellIndex, int dataIndex)
+		private bool ReloadAt(int cellIndex, int dataIndex)
 		{
 			IScrollerCellData data = _data[dataIndex];
 			IScrollerCell currentCell = cells[cellIndex];
@@ -82,7 +85,7 @@ namespace UnityUtils.DynamicScrollers
 				ClearCell(currentCell);
 				currentCell.SetData(data);
 				InitializeCell(currentCell, cellIndex, dataIndex);
-				return cellIndex + 1;
+				return true;
 			}
 
 			if (currentCell != null && cells.RecycleCellAt(dataIndex, out IScrollerCell cell))
@@ -91,10 +94,10 @@ namespace UnityUtils.DynamicScrollers
 			if (cells.TryRecycleOrCreate(data, out cell))
 			{
 				InitializeCell(cell, cellIndex, dataIndex);
-				return cellIndex + 1;
+				return true;
 			}
 
-			return cellIndex;
+			return false;
 		}
 
 		private void ResetContentSize()

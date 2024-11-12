@@ -7,6 +7,11 @@ namespace UnityUtils.UI.Colors
 	{
 		private const float size = 255f;
 
+		public static Color Darken(this Color color, float darken)
+		{
+			return Color.Lerp(color, Color.black, darken);
+		}
+
 		public static Color SetAlpha(this Color color, float a)
 		{
 			return new Color(color.r, color.g, color.b, a);
@@ -16,7 +21,6 @@ namespace UnityUtils.UI.Colors
 		{
 			return new Color(color.R / size, color.G / size, color.B / size, color.A / size);
 		}
-
 		public static SystemColor ToSystemColor(this Color color)
 		{
 			static int ToInt(float f)

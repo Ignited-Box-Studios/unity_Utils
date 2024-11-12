@@ -26,11 +26,16 @@ namespace UnityUtils.DynamicScrollers
 				}
 			}
 
+			public event CellDelegate OnCellCreated;
+
 			[SerializeField]
 			private GameObject[] cellPrefabs;
 
 			[SerializeField]
 			private RectTransform cellParent;
+
+			[SerializeField]
+			private RectTransform cellCache;
 
 			internal int PrefabCount => cellPrefabs.Length;
 			private readonly Dictionary<Type, GameObject> mappedPrefabs = new();
@@ -73,6 +78,9 @@ namespace UnityUtils.DynamicScrollers
 					cells = cachedCells[type] = new List<IScrollerCell>();
 
 				cell.Transform.gameObject.SetActive(false);
+				if (cellCache)
+					cell.Transform.SetParent(cellCache);
+
 				cells.Add(cell);
 				return true;
 			}
@@ -89,6 +97,8 @@ namespace UnityUtils.DynamicScrollers
 				cell = cells[index];
 				cells.RemoveAt(index);
 				cell.Transform.gameObject.SetActive(true);
+				cell.Transform.SetParent(cellParent);
+
 				return true;
 			}
 
@@ -107,6 +117,7 @@ namespace UnityUtils.DynamicScrollers
 					return false;
 				}
 
+				OnCellCreated?.Invoke(cell);
 				return true;
 			}
 		}

@@ -2,18 +2,18 @@
 
 namespace UnityUtils.DynamicScrollers
 {
+	public delegate void CellDelegate(IScrollerCell cell);
+
 	public partial class DynamicScroller
 	{
-		public delegate void CellClearedDelegate(IScrollerCell cell);
-		public event CellClearedDelegate OnCellCleared;
-		protected virtual void ClearCell(IScrollerCell cell)
+		public event CellDelegate OnCellCreated
 		{
-			cell.Clear();
-			OnCellCleared?.Invoke(cell);
+			add => cells.OnCellCreated += value;
+			remove => cells.OnCellCreated -= value;
 		}
+		public event CellDelegate OnCellInitialized;
+		public event CellDelegate OnCellCleared;
 
-		public delegate void CellInitializedDelegate(IScrollerCell cell);
-		public event CellClearedDelegate OnCellInitialized;
 		protected virtual void InitializeCell(IScrollerCell cell, int cellIndex, int dataIndex)
 		{
 			cell.DataIndex = dataIndex;
@@ -29,6 +29,11 @@ namespace UnityUtils.DynamicScrollers
 			}
 
 			OnCellInitialized?.Invoke(cell);
+		}
+		protected virtual void ClearCell(IScrollerCell cell)
+		{
+			cell.Clear();
+			OnCellCleared?.Invoke(cell);
 		}
 	}
 }
