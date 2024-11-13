@@ -10,6 +10,8 @@ namespace UnityUtils.Layouts.RectLayout
 	[Serializable]
 	public class RectLayoutComponent : ILayoutComponent, IAnimatedRectLayoutElement
 	{
+		public bool IsEnabled => Transform.gameObject.activeSelf;
+
 		[field: SerializeField] public RectTransform Transform { get; private set; }
 		[field: SerializeField] public RectTransform.Axis Axis { get; private set; }
 
@@ -35,9 +37,13 @@ namespace UnityUtils.Layouts.RectLayout
 			for (int i = 0; i < count; i++)
 			{
 				Transform child = Transform.GetChild(i);
+				if (!child.gameObject.activeSelf)
+					continue;
+
 				if (child.TryGetComponent(out IRectLayoutElement element))
 				{
-					rect = element.GetRectLayout(rect, parent, animate);
+					if (element.IsEnabled)
+						rect = element.GetRectLayout(rect, parent, animate);
 				}
 				else if (child is RectTransform rectChild)
 				{

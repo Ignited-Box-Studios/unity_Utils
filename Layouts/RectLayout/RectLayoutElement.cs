@@ -9,6 +9,7 @@ namespace UnityUtils.Layouts.RectLayout
 {
 	public abstract class RectLayoutElement : MonoBehaviour, IAnimatedRectLayoutElement
 	{
+		public bool IsEnabled => enabled;
 		public RectTransform Transform => transform as RectTransform;
 		[field: SerializeField] public RectTransform.Axis Axis { get; private set; }
 		[field: SerializeField] public Vector2Int OffsetDirection { get; private set; }

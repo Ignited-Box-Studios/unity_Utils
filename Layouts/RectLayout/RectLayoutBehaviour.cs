@@ -5,6 +5,8 @@ namespace UnityUtils.Layouts.RectLayout
 {
 	public class RectLayoutBehaviour : LayoutController, IRectLayoutElement
 	{
+		public bool IsEnabled => enabled;
+
 		[SerializeField] private RectLayoutComponent settings;
 
 		public override void ReloadLayout(bool animate)
