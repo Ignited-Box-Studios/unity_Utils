@@ -14,6 +14,7 @@ namespace UnityUtils.Layouts.RectLayout
 
 		[field: SerializeField] public RectTransform Transform { get; private set; }
 		[field: SerializeField] public RectTransform.Axis Axis { get; private set; }
+		[SerializeField] public Vector2 spacing;
 
 		[Header("Wrap Content")]
 		[SerializeField]private bool doWrapWidth;
@@ -42,13 +43,17 @@ namespace UnityUtils.Layouts.RectLayout
 
 				if (child.TryGetComponent(out IRectLayoutElement element))
 				{
-					if (element.IsEnabled)
-						rect = element.GetRectLayout(rect, parent, animate);
+					if (!element.IsEnabled)
+						continue;
+
+					rect = element.GetRectLayout(rect, parent, animate);
 				}
 				else if (child is RectTransform rectChild)
 				{
 					rect = rect.Wrap(rectChild);
 				}
+
+				rect = rect.AddSize(spacing);
 			}
 
 			if (DoWrap)
