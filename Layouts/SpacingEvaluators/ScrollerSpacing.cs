@@ -11,7 +11,7 @@ namespace UnityUtils.Layouts.SpacingEvaluators
 	{
 		[SerializeField] private RectTransform container;
 		[SerializeField] private Axis axis;
-		[SerializeField] private float ratio;
+		[SerializeField] public float ratio;
 		[SerializeField] private bool shrinkGridSize;
 
 		public Vector3 GetSpacing(int count, WorldGridLayout layout)

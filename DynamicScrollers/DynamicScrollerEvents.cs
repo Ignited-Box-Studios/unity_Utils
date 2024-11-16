@@ -19,8 +19,8 @@ namespace UnityUtils.DynamicScrollers
 			cell.DataIndex = dataIndex;
 			cell.CellIndex = cellIndex;
 			cell.SetData(_data[dataIndex]);
-			cell.Transform.SetSiblingIndex(cellIndex);
 			cells[cellIndex] = cell;
+			cell.Transform.SetSiblingIndex(cellIndex);
 
 			if (contentComponents.Sizing == ContentComponents.SizingType.Additive)
 			{

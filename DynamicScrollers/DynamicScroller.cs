@@ -52,7 +52,7 @@ namespace UnityUtils.DynamicScrollers
 
 			for (int i = cells.Count - 1; i >= cellIndex; i--)
 			{
-				if (!cells.RecycleCellAt(i, out IScrollerCell cell)) 
+				if (!cells.CacheCellAt(i, out IScrollerCell cell)) 
 					continue;
 
 				ClearCell(cell);
@@ -78,18 +78,15 @@ namespace UnityUtils.DynamicScrollers
 		private bool ReloadAt(int cellIndex, int dataIndex)
 		{
 			IScrollerCellData data = _data[dataIndex];
-			IScrollerCell currentCell = cells[cellIndex];
+			IScrollerCell cell = cells[cellIndex];
 
-			if (currentCell?.CellType == data.CellType)
+			if (cell?.CellType == data.CellType)
 			{
-				ClearCell(currentCell);
-				currentCell.SetData(data);
-				InitializeCell(currentCell, cellIndex, dataIndex);
+				ClearCell(cell);
+				cell.SetData(data);
+				InitializeCell(cell, cellIndex, dataIndex);
 				return true;
 			}
-
-			if (currentCell != null && cells.RecycleCellAt(dataIndex, out IScrollerCell cell))
-				ClearCell(cell);
 
 			if (cells.TryRecycleOrCreate(data, out cell))
 			{

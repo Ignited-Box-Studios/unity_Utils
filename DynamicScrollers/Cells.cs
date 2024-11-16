@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utils.Collections;
 
 namespace UnityUtils.DynamicScrollers
 {
@@ -15,14 +16,18 @@ namespace UnityUtils.DynamicScrollers
 				get => i < 0 || i >= activeCells.Count ? null : activeCells[i];
 				set
 				{
-					if (i >= activeCells.Count)
+					if (i >= Count)
 					{
 						activeCells.Add(value);
+						return;
 					}
-					else
-					{
-						activeCells[i] = value;
-					}
+
+					IScrollerCell oldCell = this[i];
+					if (oldCell == value)
+						return;
+
+					activeCells[i] = value;
+					CacheCell(oldCell);
 				}
 			}
 
@@ -63,7 +68,7 @@ namespace UnityUtils.DynamicScrollers
 				return TryRecycle(data, out cell) || TryCreate(data, out cell);
 			}
 
-			public bool RecycleCellAt(int index, out IScrollerCell cell)
+			public bool CacheCellAt(int index, out IScrollerCell cell)
 			{
 				if (index < 0 || index >= activeCells.Count)
 				{
@@ -71,34 +76,33 @@ namespace UnityUtils.DynamicScrollers
 					return false;
 				}
 
-				cell = activeCells[index];
-				activeCells.RemoveAt(index);
-				Type type = cell.CellType;
-				if (!cachedCells.TryGetValue(type, out List<IScrollerCell> cells))
-					cells = cachedCells[type] = new List<IScrollerCell>();
+				cell = activeCells.Pop(index);
 
-				cell.Transform.gameObject.SetActive(false);
-				if (cellCache)
-					cell.Transform.SetParent(cellCache);
-
-				cells.Add(cell);
+				CacheCell(cell);
 				return true;
+			}
+			private void CacheCell(IScrollerCell cell)
+			{
+				Type type = cell.CellType;
+				if (!cachedCells.TryGetValue(type, out List<IScrollerCell> cache))
+					cache = cachedCells[type] = new List<IScrollerCell>();
+
+				cache.Add(cell);
+				if (cellCache) cell.Transform.SetParent(cellCache);
+				cell.Transform.gameObject.SetActive(false);
 			}
 
 			private bool TryRecycle(IScrollerCellData data, out IScrollerCell cell)
 			{
-				if (!cachedCells.TryGetValue(data.CellType, out List<IScrollerCell> cells) || cells.Count == 0)
+				if (!cachedCells.TryGetValue(data.CellType, out List<IScrollerCell> cache) || cache.Count == 0)
 				{
 					cell = null;
 					return false;
 				}
 
-				int index = cells.Count - 1;
-				cell = cells[index];
-				cells.RemoveAt(index);
+				cell = cache.Pop();
+				if (cellCache) cell.Transform.SetParent(cellParent);
 				cell.Transform.gameObject.SetActive(true);
-				cell.Transform.SetParent(cellParent);
-
 				return true;
 			}
 
