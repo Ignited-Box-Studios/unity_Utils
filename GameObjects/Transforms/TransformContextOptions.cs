@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace UnityUtils.GameObjects.Transforms
@@ -35,3 +36,4 @@ namespace UnityUtils.GameObjects.Transforms
 		}
 	}
 }
+#endif

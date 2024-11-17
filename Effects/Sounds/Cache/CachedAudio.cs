@@ -88,7 +88,7 @@ namespace UnityUtils.GameObjects.ObjectCaches.Caches
 
 		private bool DestroyIfCacheless()
 		{
-			if (!audio.clip || audioCache == null || !audioCache.IsAlive)
+			if (!audio || !audio.clip || audioCache == null || !audioCache.IsAlive)
 			{
 				Destroy();
 				return true;
