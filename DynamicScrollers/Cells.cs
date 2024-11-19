@@ -76,7 +76,7 @@ namespace UnityUtils.DynamicScrollers
 					return false;
 				}
 
-				cell = activeCells.Pop(index);
+				cell = activeCells.PopAt(index);
 
 				CacheCell(cell);
 				return true;

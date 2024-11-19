@@ -22,8 +22,9 @@ namespace UnityUtils.Sounds
 
 		public static float RemainingTime(this AudioSource source)
 		{
-			if (!source.isPlaying)
+			if (!source || !source.isPlaying)
 				return 0;
+
 			return (source.clip.length - source.time) * ((Time.timeScale < 0.01f) ? 0.01f : Time.timeScale);
 		}
 	}
