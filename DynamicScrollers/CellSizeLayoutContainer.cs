@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityUtils.DynamicScrollers
 {
@@ -27,8 +28,8 @@ namespace UnityUtils.DynamicScrollers
 				_ => Vector2.zero
 			};
 
-			IScrollerCellData[] data = scroller.Data;
-			for (int i = 0; i < data.Length; i++)
+			IList<IScrollerCellData> data = scroller.Data;
+			for (int i = 0; i < data.Count; i++)
 			{
 				IScrollerCell cell = scroller.GetCellAt(i);
 				if (cell == null)

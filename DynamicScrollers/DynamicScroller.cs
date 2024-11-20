@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityUtils.PropertyAttributes;
 using Axis = UnityEngine.RectTransform.Axis;
@@ -17,8 +18,8 @@ namespace UnityUtils.DynamicScrollers
 		[SerializeField] private Cells cells;
 		[SerializeField] private ContentComponents contentComponents;
 
-		private IScrollerCellData[] _data;
-		public IScrollerCellData[] Data
+		private IList<IScrollerCellData> _data;
+		public IList<IScrollerCellData> Data
 		{
 			get => _data;
 			set
@@ -43,7 +44,7 @@ namespace UnityUtils.DynamicScrollers
 			ResetContentSize();
 
 			int cellIndex = 0;
-			int count = _data?.Length ?? 0;
+			int count = _data?.Count ?? 0;
 			for (int dataIndex = 0; dataIndex < count; dataIndex++)
 			{
 				if (ReloadAt(cellIndex, dataIndex))
@@ -58,7 +59,7 @@ namespace UnityUtils.DynamicScrollers
 				ClearCell(cell);
 			}
 
-			if (count > 0 && contentComponents.Sizing == ContentComponents.SizingType.OnReload)
+			if (count > 0 && contentComponents.Sizing == ContentComponents.SizingType.OnReload && contentComponents.Layout != null)
 			{
 				Vector2 size = contentComponents.Layout.GetContentSize(ScrollAxis, viewport);
 				SetContentSize(size);

@@ -29,6 +29,9 @@ namespace UnityUtils.DynamicScrollers
 
 			public Vector2 StartPadding(Axis axis)
 			{
+				if (layoutGroup == null)
+					return Vector2.zero;
+
 				var padding = layoutGroup.Padding;
 				return axis switch
 				{
@@ -40,6 +43,9 @@ namespace UnityUtils.DynamicScrollers
 
 			public Vector2 EndPadding(Axis axis)
 			{
+				if (layoutGroup == null)
+					return Vector2.zero;
+
 				var padding = layoutGroup.Padding;
 				return axis switch
 				{
