@@ -49,6 +49,11 @@ namespace UnityUtils.RectUtils
 			float height = getHeight ? transform.GetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rect.height) : delta.y;
 			return new Vector2(width, height);
 		}
+		public static void SetSize(this RectTransform transform, Vector2 size)
+		{
+			transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+			transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+		}
 		public static void SetRect(this RectTransform transform, Rect rect, bool setWidth = true, bool setHeight = true)
 		{
 			if (setWidth)

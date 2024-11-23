@@ -15,21 +15,18 @@ namespace UnityUtils.Layouts.RectLayout
 			gameObject.SetActive(enabled);
 		}
 
-		protected override Rect GetHorizontalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetHorizontalRectLayout(Rect offset, Rect source)
 		{
-			Rect parentRect = parent.rect;
 			return new Rect(offset.xMax, 0,
-					ratio.GetWidthFromHeight(parentRect.height), 
-					useCurrentSize ? Rect.height : parentRect.height
+					ratio.GetWidthFromHeight(source.height), 
+					useCurrentSize ? Rect.height : source.height
 				);
 		}
-		protected override Rect GetVerticalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetVerticalRectLayout(Rect offset, Rect source)
 		{
-			Rect parentRect = parent.rect;
-			
 			return new Rect(0, offset.yMax,
-					useCurrentSize ? Rect.width : parentRect.width,
-					ratio.GetHeightFromWidth(parentRect.width)
+					useCurrentSize ? Rect.width : source.width,
+					ratio.GetHeightFromWidth(source.width)
 				);
 		}
 	}

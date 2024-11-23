@@ -14,16 +14,16 @@ namespace UnityUtils.Layouts.RectLayout
 			label.enabled = enabled;
 		}
 
-		protected override Rect GetHorizontalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetHorizontalRectLayout(Rect offset, Rect source)
 		{
-			float height = parent.rect.height;
+			float height = source.height;
 			Vector2 size = HasContent ? label.GetPreferredValues(0, height) : Vector2.zero;
 			return new Rect(offset.xMax, 0, size.x, height);
 		}
 
-		protected override Rect GetVerticalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetVerticalRectLayout(Rect offset, Rect source)
 		{
-			float width = parent.rect.width;
+			float width = source.width;
 			Vector2 size = HasContent ? label.GetPreferredValues(width, 0) : Vector2.zero;
 			return new Rect(0, offset.yMax, width, size.y);
 		}

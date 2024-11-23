@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 namespace UnityUtils.DynamicScrollers
 {
-	public struct LayoutGroupContainer : ILayoutGroupContainer
+	public class LayoutGroupContainer : ILayoutGroupContainer
 	{
-		public readonly Vector2 Spacing
+		public Vector2 Spacing
 		{
 			get
 			{
@@ -22,8 +22,8 @@ namespace UnityUtils.DynamicScrollers
 			}
 		}
 
-		public readonly RectOffset Padding => layout ? layout.padding : default;
-		public readonly Vector2Int GridSize
+		public RectOffset Padding => layout ? layout.padding : default;
+		public Vector2Int GridSize
 		{
 			get
 			{
@@ -38,7 +38,7 @@ namespace UnityUtils.DynamicScrollers
 
 		[SerializeField] private HorizontalOrVerticalLayoutGroup layout;
 
-		public readonly Vector2 GetContentSize(RectTransform.Axis scrollAxis, RectTransform rect)
+		public Vector2 GetContentSize(RectTransform.Axis scrollAxis, RectTransform rect)
 		{
 			return rect.sizeDelta;
 		}

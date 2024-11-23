@@ -29,15 +29,15 @@ namespace UnityUtils.Layouts.RectLayout
 
 		protected virtual void OnSetEnabled(bool enabled) { }
 
-		public Rect GetRectLayout(Rect offset, RectTransform parent, bool animate)
+		public Rect GetRectLayout(Rect offset, Rect source, bool animate)
 		{
 			if (!isActiveAndEnabled)
 				return offset;
 
 			TargetRect = Axis switch
 			{
-				RectTransform.Axis.Horizontal => GetHorizontalRectLayout(offset, parent),
-				RectTransform.Axis.Vertical => GetVerticalRectLayout(offset, parent),
+				RectTransform.Axis.Horizontal => GetHorizontalRectLayout(offset, source),
+				RectTransform.Axis.Vertical => GetVerticalRectLayout(offset, source),
 				_ => throw new ArgumentOutOfRangeException(nameof(Axis)),
 			};
 
@@ -53,8 +53,8 @@ namespace UnityUtils.Layouts.RectLayout
 			return TargetRect;
 		}
 
-		protected abstract Rect GetVerticalRectLayout(Rect offset, RectTransform parent);
-		protected abstract Rect GetHorizontalRectLayout(Rect offset, RectTransform parent);
+		protected abstract Rect GetVerticalRectLayout(Rect offset, Rect source);
+		protected abstract Rect GetHorizontalRectLayout(Rect offset, Rect source);
 
 		public bool Next()
 		{

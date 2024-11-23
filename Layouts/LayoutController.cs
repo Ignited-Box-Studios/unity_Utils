@@ -11,6 +11,7 @@ namespace UnityUtils.Common.Layout
 		[SerializeField] private bool reloadOnEnable = true;
 		[SerializeField] private bool reloadOnChildrenChange = true;
 		[SerializeField] private bool reloadOnResize = true;
+		[SerializeField] private bool animateOnAutoReload;
 
 		protected virtual void OnValidate() 
 		{
@@ -37,7 +38,7 @@ namespace UnityUtils.Common.Layout
 		protected virtual void Update()
 		{
 			if (isReloadRequested)
-				ReloadLayout(false);
+				ReloadLayout(animateOnAutoReload);
 		}
 
 		public virtual void ReloadLayout(bool animate = false)

@@ -14,20 +14,18 @@ namespace UnityUtils.Layouts.RectLayout
 		}
 
 
-		protected override Rect GetHorizontalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetHorizontalRectLayout(Rect offset, Rect source)
 		{
-			Rect relativeRect = relative.rect;
 			return new Rect(offset.xMax, 0,
-					relativeRect.width * widthRatio,
-					relativeRect.height * heightRatio
+					source.width * widthRatio,
+					source.height * heightRatio
 				);
 		}
-		protected override Rect GetVerticalRectLayout(Rect offset, RectTransform parent)
+		protected override Rect GetVerticalRectLayout(Rect offset, Rect source)
 		{
-			Rect relativeRect = relative.rect;
 			return new Rect(0, offset.yMax,
-					relativeRect.width * widthRatio,
-					relativeRect.height * heightRatio
+					source.width * widthRatio,
+					source.height * heightRatio
 				);
 		}
 	}

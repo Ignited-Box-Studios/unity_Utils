@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityUtils.PropertyAttributes;
+using UnityUtils.RectUtils;
 using Axis = UnityEngine.RectTransform.Axis;
 
 namespace UnityUtils.DynamicScrollers
@@ -100,14 +101,13 @@ namespace UnityUtils.DynamicScrollers
 
 		private void ResetContentSize()
 		{
-			content.sizeDelta = Vector2.zero;
 			Axis scrollAxis = ScrollAxis;
-			content.sizeDelta = contentComponents.StartPadding(scrollAxis) + contentComponents.EndPadding(scrollAxis);
+			SetContentSize(contentComponents.StartPadding(scrollAxis) + contentComponents.EndPadding(scrollAxis));
 		}
 
 		private void SetContentSize(Vector2 size)
 		{
-			content.sizeDelta = size;
+			content.SetSize(size);
 		}
 		private void AddViewportSize(Vector2 cellSize, int cellIndex)
 		{

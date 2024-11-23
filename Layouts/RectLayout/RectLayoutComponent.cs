@@ -25,14 +25,14 @@ namespace UnityUtils.Layouts.RectLayout
 
 		private bool DoWrap => doWrapWidth || doWrapHeight;
 
-		public void Reload(Transform parentTransform, bool animate)
+		public void Reload(Transform sizeSource, bool animate)
 		{
-			if (parentTransform is not RectTransform parent)
+			if (sizeSource is not RectTransform parent)
 				return;
 
-			ReloadSize(default, parent, animate);
+			ReloadSize(default, parent.rect, animate);
 		}
-		private Rect ReloadSize(Rect rect, RectTransform parent, bool animate)
+		private Rect ReloadSize(Rect rect, Rect source, bool animate)
 		{
 			int count = Transform.childCount;
 			for (int i = 0; i < count; i++)
@@ -46,7 +46,7 @@ namespace UnityUtils.Layouts.RectLayout
 					if (!element.IsEnabled)
 						continue;
 
-					rect = element.GetRectLayout(rect, parent, animate);
+					rect = element.GetRectLayout(rect, source, animate);
 				}
 				else if (child is RectTransform rectChild)
 				{
@@ -61,9 +61,9 @@ namespace UnityUtils.Layouts.RectLayout
 
 			return rect;
 		}
-		public Rect GetRectLayout(Rect offset, RectTransform parent, bool animate)
+		public Rect GetRectLayout(Rect offset, Rect source, bool animate)
 		{
-			return ReloadSize(offset, parent, animate);
+			return ReloadSize(offset, source, animate);
 		}
 		private void Wrap(Rect wrap, bool animate)
 		{
