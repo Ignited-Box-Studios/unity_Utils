@@ -87,7 +87,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 312
     y: 612
-    width: 517
+    width: 523
     height: 272
 --- !u!114 &114350483966674978
 MonoBehaviour:
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_InputSlots:
   - {fileID: 114350483966674984}
   m_OutputSlots: []
-  m_ExposedName: dgree
+  m_ExposedName: degree
   m_Exposed: 0
   m_Order: 0
   m_Category: 
@@ -264,8 +264,6 @@ MonoBehaviour:
   m_Nodes:
   - m_Id: 0
     linkedSlots:
-    - outputSlot: {fileID: 114350483966674981}
-      inputSlot: {fileID: 114350483966674984}
     - outputSlot: {fileID: 114350483966674990}
       inputSlot: {fileID: 114350483966674984}
     position: {x: 714.5, y: 810}
