@@ -5,20 +5,19 @@ using UnityEngine;
 namespace UnityUtils.Effects.VisualEffects
 {
 	[Serializable]
-	public class LifetimeComponent : IVisualEffectComponent,
-		ISerializationCallbackReceiver
+	public class LifetimeComponent : IVisualEffectComponent
 	{
 		public enum Action
 		{
 			None,
 			Destroy,
+			Shrink
 		}
 
 		public string Name => nameof(LifetimeComponent);
 
 		[SerializeField] private VisualEffectBehaviour subject;
 		[SerializeField] private float lifetime;
-		[SerializeField, HideInInspector] private bool destroy;
 		[SerializeField] private Action action;
 
 		private Coroutine lifetimeCoroutine;
@@ -42,22 +41,44 @@ namespace UnityUtils.Effects.VisualEffects
 
 		private IEnumerator CountdownLifetime()
 		{
-			yield return new WaitForSeconds(lifetime);
-			subject.Stop();
 			switch (action)
 			{
 				case Action.Destroy:
-					subject.Destroy();
-					break;
+					return DestroyAction();
+				case Action.Shrink:
+					return TweenScale();
+			}
+
+			return NoneAction();
+		}
+		private IEnumerator NoneAction()
+		{
+			yield return new WaitForEndOfFrame();
+		}
+		private IEnumerator DestroyAction()
+		{
+			yield return new WaitForSeconds(lifetime);
+			subject.Stop();
+			subject.Destroy();
+		}
+		private IEnumerator TweenScale()
+		{
+			yield return new WaitForSeconds(lifetime);
+
+			Vector3 target = Vector3.zero;
+			Vector3 start = subject.transform.localScale;
+			WaitForEndOfFrame frame = new WaitForEndOfFrame();
+
+			const float duration = 0.2f;
+			float time = 0;
+
+			while (time < duration)
+			{
+				float norm = time / duration;
+				subject.transform.localScale = Vector3.Lerp(start, target, norm);
+				time += Time.deltaTime;
+				yield return frame;
 			}
 		}
-
-		public void OnBeforeSerialize()
-		{
-			if (destroy)
-				action = Action.Destroy;
-		}
-
-		public void OnAfterDeserialize() { }
 	}
 }

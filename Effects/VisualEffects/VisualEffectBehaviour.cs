@@ -53,6 +53,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 			while (IsPlaying)
 				await Task.Yield();
+
 			action();
 		}
 
@@ -87,7 +88,7 @@ namespace UnityUtils.Effects.VisualEffects
 		{
 			Dispose();
 			if (this && gameObject)
-				Destroy(gameObject, 1);
+				Destroy(gameObject);
 		}
 	}
 }
