@@ -8,7 +8,7 @@ namespace UnityUtils.Animations.AnimationEvents
 		public static AnimationEvent FindEventWithName(this AnimationClip clip, string name)
 		{
 			return clip.events.FirstOrDefault(e => e.stringParameter == name ||
-				(e.objectReferenceParameter is AnimationEventBehaviour evnt && evnt.HasSubEvent(name))
+				(e.objectReferenceParameter is ScriptableAnimationEvent evnt && evnt.HasSubEvent(name))
 			);
 		}
 	}

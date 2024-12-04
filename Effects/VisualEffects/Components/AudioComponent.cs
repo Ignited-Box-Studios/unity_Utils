@@ -8,34 +8,38 @@ namespace UnityUtils.Effects.VisualEffects
 	public interface IAudioParameterFunctions : IParameterFunctions<AudioSource> { }
 
 	[Serializable]
-	public struct AudioComponent : IVisualEffectComponent
+	public class AudioComponent : IVisualEffectComponent
 	{
 		[SerializeField]
 		private AudioSource source;
 
-		[SerializeReference, Polymorphic(true)]
+		[SerializeReference, Polymorphic(true), HideInInspector]
 		private IAudioParameterFunctions functions;
 
-		public readonly string Name => source.clip.name;
+		[SerializeReference, Polymorphic(true)]
+		private IAudioParameterFunctions audioFunctions;
 
-		public readonly void Play()
+		public string Name => source.clip.name;
+		private IAudioParameterFunctions Functions => audioFunctions ?? functions;
+
+		public void Play()
 		{
 			source.enabled = true;
 			if (source.gameObject.activeInHierarchy)
 				source.Play();
 		}
-		public readonly void Stop()
+		public void Stop()
 		{
 			source.enabled = false;
 		}
 
-		public readonly T GetValue<T>(int id)
+		public T GetValue<T>(int id)
 		{
-			return functions == null ? default : functions.GetValue<T>(source, id);
+			return Functions == null ? default : Functions.GetValue<T>(source, id);
 		}
-		public readonly void SetValue<T>(int id, T value, bool isOptional = false)
+		public void SetValue<T>(int id, T value, bool isOptional = false)
 		{
-			functions?.SetValue(source, id, value, isOptional);
+			Functions?.SetValue(source, id, value, isOptional);
 		}
 	}
 }

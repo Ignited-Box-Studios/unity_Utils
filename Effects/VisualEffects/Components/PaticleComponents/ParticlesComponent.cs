@@ -13,10 +13,14 @@ namespace UnityUtils.Effects.VisualEffects
 		[SerializeField]
 		private ParticleSystem particles;
 
-		[SerializeReference, Polymorphic(true)]
+		[SerializeReference, Polymorphic(true), HideInInspector]
 		private IParticlesParameterFunctions functions;
 
-		public string Name => particles.gameObject.name;
+		[SerializeReference, Polymorphic(true)]
+		private IParticlesParameterFunctions particleFunctions;
+		private IParticlesParameterFunctions Functions => particleFunctions ?? functions;
+
+		public string Name => particles.name;
 		
 		public ParticleSystem.MinMaxCurve StartSize
 		{
@@ -107,15 +111,15 @@ namespace UnityUtils.Effects.VisualEffects
 
 		public T GetValue<T>(int id)
 		{
-			if (functions != null)
-				return functions.GetValue<T>(this, id);
+			if (Functions != null)
+				return Functions.GetValue<T>(this, id);
 
 			return particles.TryGetProperty(id, out T value) ? value : default;
 		}
 
 		public void SetValue<T>(int id, T value, bool isOptional = false)
 		{
-			functions?.SetValue(this, id, value, isOptional);
+			Functions?.SetValue(this, id, value, isOptional);
 		}
 	}
 }

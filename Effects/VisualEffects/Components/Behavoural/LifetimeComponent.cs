@@ -41,15 +41,12 @@ namespace UnityUtils.Effects.VisualEffects
 
 		private IEnumerator CountdownLifetime()
 		{
-			switch (action)
+			return action switch
 			{
-				case Action.Destroy:
-					return DestroyAction();
-				case Action.Shrink:
-					return TweenScale();
-			}
-
-			return NoneAction();
+				Action.Destroy => DestroyAction(),
+				Action.Shrink => TweenScale(),
+				_ => NoneAction(),
+			};
 		}
 		private IEnumerator NoneAction()
 		{

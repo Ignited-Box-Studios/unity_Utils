@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityUtils.Animations.AnimationEvents;
 using UnityUtils.PropertyAttributes;
 using Utilities.Collections;
 

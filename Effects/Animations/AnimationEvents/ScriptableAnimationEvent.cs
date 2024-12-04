@@ -5,7 +5,7 @@ using UnityUtils.PropertyAttributes;
 
 namespace UnityUtils.Animations.AnimationEvents
 {
-	public class AnimationEventBehaviour : ScriptableObject
+	public class ScriptableAnimationEvent : ScriptableObject
 	{
 		[SerializeReference, Polymorphic]
 		private IAnimationEvent[] _events;

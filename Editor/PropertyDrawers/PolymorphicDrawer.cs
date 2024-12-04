@@ -16,10 +16,16 @@ namespace UnityUtils.Editor.PropertyDrawers
 
 		private void Init(SerializedProperty prop, PolymorphicAttribute polyAttr)
 		{
-			if (polyAttr.WasInitialized) return;
+			string path = prop.propertyPath;
+
+			if (polyAttr.IsInitialized)
+			{
+				return;
+			}
 
 			int listIndex = prop.GetIndex();
-			polyAttr.SetFieldInfo(prop.GetParent(), fieldInfo, listIndex);
+			object parent = prop.GetParent();
+			polyAttr.SetFieldInfo(parent, fieldInfo, listIndex);
 		}
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -130,7 +136,7 @@ namespace UnityUtils.Editor.PropertyDrawers
 
 			if (index == polyAttr.Index) return position;
 			
-			polyAttr.SetFieldInfo(property.GetParent(), fieldInfo, listIndex);
+			//polyAttr.SetFieldInfo(property.GetParent(), fieldInfo, listIndex);
 			if (polyAttr.ChangeIndex(index, listIndex, true, out var value))
 			{
 				property.boxedValue = value;

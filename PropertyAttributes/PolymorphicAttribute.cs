@@ -21,7 +21,7 @@ namespace UnityUtils.PropertyAttributes
 		public readonly PolymorphicSettings settings;
 		public string[] Options { get; private set; }
 		public Type BaseType { get; private set; }
-		public bool WasInitialized => types != null;
+		public bool IsInitialized => types != null;
 		private Type[] types;
 		private ConstructorInfo[] constructors;
 

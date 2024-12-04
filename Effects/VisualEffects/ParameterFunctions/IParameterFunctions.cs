@@ -16,6 +16,7 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 		private readonly Dictionary<int, IPropertyDelegate> delegates = new();
 
 		protected virtual bool ThrowExceptions => true;
+		protected virtual bool ConsiderAllOptional => false;
 
 		protected IPropertyDelegate this[string name]
 		{
@@ -70,11 +71,13 @@ namespace UnityUtils.Effects.VisualEffects.ParameterFunctions
 
 		protected void OnException(bool isOptional, Exception exception)
 		{
-			if (ThrowExceptions && !isOptional)
+			if (isOptional || ConsiderAllOptional)
+				return;
+
+			if (ThrowExceptions)
 				throw exception;
 
-			if (!isOptional)
-				Debug.LogException(exception);
+			Debug.LogException(exception);
 		}
 
 		public virtual T GetValue<T>(TComponent component, int id)
