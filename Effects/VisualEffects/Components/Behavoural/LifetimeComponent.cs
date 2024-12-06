@@ -27,7 +27,7 @@ namespace UnityUtils.Effects.VisualEffects
 
 		public void Play()
 		{
-			if (lifetimeCoroutine != null)
+			if (lifetimeCoroutine != null || !subject || !subject.isActiveAndEnabled)
 				return;
 
 			lifetimeCoroutine = subject.StartCoroutine(CountdownLifetime());

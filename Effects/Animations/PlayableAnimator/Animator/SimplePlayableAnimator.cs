@@ -88,7 +88,7 @@ namespace UnityUtils.Effects.Animations.PlayableAnimator
 
 		public bool IsPlaying(string stateName)
 		{
-			return m_Playable.IsPlaying(stateName);
+			return Animator && Animator.isActiveAndEnabled && m_Playable.IsPlaying(stateName);
 		}
 
 		public void Stop()
