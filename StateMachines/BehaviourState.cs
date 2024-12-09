@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
+using UnityUtils.StateMachines.Transitions;
 using UnityUtils.AddressableUtils;
 using Utils.StateMachines;
 
@@ -22,22 +23,24 @@ namespace UnityUtils.Systems.States
 				if (Instance.transform is RectTransform rect)
 					rect.sizeDelta = Vector3.zero;
 			}
-
-			Instance.gameObject.SetActive(false);
+			
+			if (Instance is IBehaviourStateTransition transition)
+				await transition.Preload(Instance);
 		}
 
-		protected override Task OnEnter()
+		protected override async Task OnEnter()
 		{
-			if (Instance)
-				Instance.gameObject.SetActive(true);
-			return base.OnEnter();
+			if (Instance is IBehaviourStateTransition transition)
+				await transition.Enter(Instance);
+
+			await base.OnEnter();
 		}
 
-		protected override Task OnExit()
+		protected override async Task OnExit()
 		{
-			if (Instance)
-				Instance.gameObject.SetActive(false);
-			return base.OnExit();
+			if (Instance is IBehaviourStateTransition transition)
+				await transition.Exit(Instance);
+			await base.OnExit();
 		}
 
 		protected override async Task OnCleanup()

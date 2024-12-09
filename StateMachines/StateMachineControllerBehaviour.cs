@@ -5,6 +5,7 @@ using UnityEngine;
 using Utils.Logger;
 using UnityUtils.PropertyAttributes;
 using Utils.StateMachines;
+using System.Runtime.CompilerServices;
 
 namespace UnityUtils.Systems.States
 {
@@ -19,11 +20,11 @@ namespace UnityUtils.Systems.States
 
 		protected IStateMachine<Type> stateMachine;
 		public IState<Type> ActiveState => stateMachine?.ActiveState;
-		IState IStateMachine.ActiveState => stateMachine?.ActiveState;
-		public IStateMachine<Type>.SwitchInfo ActiveSwitch => stateMachine.ActiveSwitch;
-		public bool IsSwitching => stateMachine.IsSwitching;
+		public IState<Type> NextState => stateMachine?.NextState;
+		public bool IsTransitioning => stateMachine.IsTransitioning;
 
 		public event StateChangeDelegate<Type> OnStateChange;
+		public event TransitionDelegate OnTransition;
 		public event ExceptionHandlerDelegate OnException;
 
 		protected virtual void Awake()
@@ -40,6 +41,7 @@ namespace UnityUtils.Systems.States
 		{
 			stateMachine.ExitActiveState().LogException();
 			stateMachine.OnStateChange -= OnStateMachineStateChange;
+			stateMachine.OnTransition -= OnTransitionChange;
 			stateMachine.OnException -= OnStateMachineException;
 		}
 
@@ -63,6 +65,7 @@ namespace UnityUtils.Systems.States
 			{
 				stateMachine = CreateStateMachine(states);
 				stateMachine.OnStateChange += OnStateMachineStateChange;
+				stateMachine.OnTransition += OnTransitionChange;
 				stateMachine.OnException += OnStateMachineException;
 			}
 			catch (Exception e)
@@ -71,6 +74,7 @@ namespace UnityUtils.Systems.States
 				Debug.LogException(e);
 			}
 		}
+
 
 		protected virtual void OnStateMachineException(Exception exception)
 		{
@@ -83,6 +87,10 @@ namespace UnityUtils.Systems.States
 			activeState = (T)next;
 			OnStateChange?.Invoke(current, next);
 		}
+		private void OnTransitionChange(TransitionType type)
+		{
+			OnTransition?.Invoke(type);
+		}
 
 		protected virtual IStateMachine<Type> CreateStateMachine(T[] states)
 		{
@@ -93,6 +101,7 @@ namespace UnityUtils.Systems.States
 		public Task SwitchState(IStateData<Type> data) => stateMachine.SwitchState(data);
 		public Task SwitchState(Type key) => stateMachine.SwitchState(key);
 		public Task ExitActiveState() => stateMachine.ExitActiveState();
+		public TaskAwaiter GetAwaiter() => stateMachine.GetAwaiter();
 		public bool ContainsState(Type key) => stateMachine.ContainsState(key);
 		public void AddOrReplaceState(IState<Type> state) => stateMachine.AddOrReplaceState(state);
 	}
