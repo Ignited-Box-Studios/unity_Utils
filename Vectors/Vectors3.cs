@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace IgnitedBox.UnityUtilities.Vectors
+namespace Ignidem.UnityUtilities.Vectors
 {
     public static class Vectors3
     {

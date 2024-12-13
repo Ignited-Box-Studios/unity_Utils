@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace UnityUtils.Animations.AnimationEvents
 {
@@ -26,6 +27,11 @@ namespace UnityUtils.Animations.AnimationEvents
 				Debug.LogWarning($"Object Reference {evntObjTypeName} is not an {nameof(ScriptableAnimationEvent)}");
 			}
 #endif
+		}
+
+		public void Invoke(UnityEvent callback)
+		{
+			callback.Invoke();
 		}
 	}
 }

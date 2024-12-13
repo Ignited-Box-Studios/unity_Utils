@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Utilities.Numbers;
 
-namespace IgnitedBox.UnityUtilities.Vectors
+namespace Ignidem.UnityUtilities.Vectors
 {
     public static class Vectors2
     {

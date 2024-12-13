@@ -23,23 +23,45 @@ namespace UnityUtils.Systems.States
 				if (Instance.transform is RectTransform rect)
 					rect.sizeDelta = Vector3.zero;
 			}
-			
+
 			if (Instance is IBehaviourStateTransition transition)
+			{ 
 				await transition.Preload(Instance);
+			}
+			else
+			{
+				Instance.gameObject.SetActive(false);
+			}
 		}
 
 		protected override async Task OnEnter()
 		{
 			if (Instance is IBehaviourStateTransition transition)
-				await transition.Enter(Instance);
+			{	
+				await transition.Enter(Instance); 
+			}
+			else
+			{
+				Instance.gameObject.SetActive(true);
+			}
 
 			await base.OnEnter();
 		}
 
 		protected override async Task OnExit()
 		{
-			if (Instance is IBehaviourStateTransition transition)
-				await transition.Exit(Instance);
+			if (Instance)
+			{
+				if (Instance is IBehaviourStateTransition transition)
+				{
+					await transition.Exit(Instance);
+				}
+				else
+				{
+					Instance.gameObject.SetActive(false);
+				}
+			}
+
 			await base.OnExit();
 		}
 
