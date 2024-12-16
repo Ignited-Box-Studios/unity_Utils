@@ -32,7 +32,7 @@ namespace UnityUtils.Layouts.RectLayout
 
 			ReloadSize(default, parent.rect, animate);
 		}
-		private Rect ReloadSize(Rect rect, Rect source, bool animate)
+		private Rect ReloadSize(Rect rect, in Rect source, bool animate)
 		{
 			int count = Transform.childCount;
 			for (int i = 0; i < count; i++)
@@ -47,6 +47,7 @@ namespace UnityUtils.Layouts.RectLayout
 						continue;
 
 					rect = element.GetRectLayout(rect, source, animate);
+					//rect = rect.Wrap(offset);
 				}
 				else if (child is RectTransform rectChild)
 				{

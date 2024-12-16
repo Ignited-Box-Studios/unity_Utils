@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityUtils.PropertyAttributes;
 using UnityUtils.RectUtils;
 using Axis = UnityEngine.RectTransform.Axis;
 
@@ -13,7 +13,6 @@ namespace UnityUtils.DynamicScrollers
 		{
 			nameof(cells),
 			nameof(contentComponents),
-			nameof(_data),
 		};
 
 		[SerializeField] private Cells cells;
@@ -34,12 +33,39 @@ namespace UnityUtils.DynamicScrollers
 
 		public Axis ScrollAxis => vertical ? Axis.Vertical : Axis.Horizontal;
 
+		private IScrollerFilter filter;
+		private bool pendingReload;
+
 		protected override void OnEnable()
 		{
 			base.OnEnable();
 			ReloadCells();
 		}
 
+		protected override void LateUpdate()
+		{
+			base.LateUpdate();
+
+			if (pendingReload)
+			{
+				pendingReload = false;
+				ReloadCells();
+			}
+		}
+
+		public void SetFilter(IScrollerFilter filter)
+		{
+			this.filter = filter;
+		}
+		public bool FilterData(int dataIndex, IScrollerCellData data)
+		{
+			return filter == null || filter.Include(dataIndex, data);
+		}
+
+		public void RequestReload()
+		{
+			pendingReload = true;
+		}
 		public void ReloadCells()
 		{
 			ResetContentSize();
@@ -80,6 +106,10 @@ namespace UnityUtils.DynamicScrollers
 		private bool ReloadAt(int cellIndex, int dataIndex)
 		{
 			IScrollerCellData data = _data[dataIndex];
+
+			if (!FilterData(dataIndex, data))
+				return false;
+
 			IScrollerCell cell = cells[cellIndex];
 
 			if (cell?.CellType == data.CellType)

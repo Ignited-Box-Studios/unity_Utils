@@ -14,6 +14,7 @@ namespace UnityUtils.UI.Selectable.Editor
 			EditorGUILayout.PropertyField(serializedObject.GetRelativeProperty("animations"));
 
 			EditorGUILayout.PropertyField(serializedObject.GetRelativeProperty("label"));
+			EditorGUILayout.PropertyField(serializedObject.GetRelativeProperty(nameof(Button.Icon)));
 
 			serializedObject.ApplyModifiedProperties();
 			base.OnInspectorGUI();

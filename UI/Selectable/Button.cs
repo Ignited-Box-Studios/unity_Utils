@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityUtils.PropertyAttributes;
+using UnityUtils.UI.ImageComponents;
 using UnityUtils.UI.Selectable.Groups;
 using Utils.Logger;
 
@@ -50,6 +51,9 @@ namespace UnityUtils.UI.Selectable
 				if (label) label.text = value;
 			}
 		}
+
+		[field: SerializeReference, Polymorphic]
+		public IImageComponent Icon { get; private set; }
 
 		[SerializeReference, Polymorphic]
 		[InspectorName("Events")]

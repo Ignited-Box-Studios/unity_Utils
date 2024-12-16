@@ -69,7 +69,8 @@ namespace UnityUtils.Layouts.RectLayout
 		public void SetRect(Rect rect)
 		{
 			RectTransform transform = Transform;
-			transform.localPosition = rect.position * OffsetDirection;
+			Vector3 localPos = rect.position * OffsetDirection;
+			transform.localPosition = localPos;
 			transform.SetRect(rect);
 		}
 	}

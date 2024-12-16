@@ -3,6 +3,7 @@ using Utilities.Numbers;
 
 namespace UnityUtils.Layouts.RectLayout
 {
+	[ExecuteInEditMode]
 	public class RatioLayoutElement : RectLayoutElement
 	{
 		[SerializeField] private float ratio;
