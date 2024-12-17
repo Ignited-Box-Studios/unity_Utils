@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityUtils.PropertyAttributes;
 using UnityUtils.RectUtils;
 using Axis = UnityEngine.RectTransform.Axis;
 
@@ -9,10 +9,13 @@ namespace UnityUtils.DynamicScrollers
 {
 	public partial class DynamicScroller : ScrollRect
 	{
+		private static IScrollerSorter DefaultSorter = new DataAlignmentSorter();
 		public static readonly string[] serializedFields =
 		{
 			nameof(cells),
 			nameof(contentComponents),
+			nameof(filter),
+			nameof(sorter),
 		};
 
 		[SerializeField] private Cells cells;
@@ -33,7 +36,12 @@ namespace UnityUtils.DynamicScrollers
 
 		public Axis ScrollAxis => vertical ? Axis.Vertical : Axis.Horizontal;
 
+		[SerializeReference, Polymorphic(true)]
 		private IScrollerFilter filter;
+
+		[SerializeReference, Polymorphic(true)]
+		private IScrollerSorter sorter;
+
 		private bool pendingReload;
 
 		protected override void OnEnable()
@@ -72,10 +80,13 @@ namespace UnityUtils.DynamicScrollers
 
 			int cellIndex = 0;
 			int count = _data?.Count ?? 0;
-			for (int dataIndex = 0; dataIndex < count; dataIndex++)
+			if (count > 0)
 			{
-				if (ReloadAt(cellIndex, dataIndex))
-					cellIndex++;
+				foreach (int dataIndex in (sorter ?? DefaultSorter).Sort(_data))
+				{
+					if (ReloadAt(cellIndex, dataIndex))
+						cellIndex++;
+				}
 			}
 
 			for (int i = cells.Count - 1; i >= cellIndex; i--)

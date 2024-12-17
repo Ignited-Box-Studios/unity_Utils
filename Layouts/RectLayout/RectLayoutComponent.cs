@@ -91,9 +91,8 @@ namespace UnityUtils.Layouts.RectLayout
 
 		public void SetRect(Rect rect)
 		{
-			//Transform.localPosition = rect.position;
-			Vector2 size = Transform.GetDeltaWithAnchors(rect, doWrapWidth, doWrapHeight);
-			Transform.sizeDelta = size;
+			Vector2 delta = Transform.GetDeltaWithAnchors(rect, doWrapWidth, doWrapHeight);
+			Transform.sizeDelta = delta;
 		}
 	}
 }
