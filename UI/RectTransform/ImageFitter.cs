@@ -28,7 +28,8 @@ namespace UnityUtils.UI.Selectable
 		public Vector2 GetSpriteSize()
 		{
 			Sprite sprite = GetImageSprite();
-			return sprite ? sprite.rect.size : Vector2.zero;
+			return sprite ? sprite.rect.size :
+				transform.parent is RectTransform rect ? rect.rect.size : Vector2.zero;
 		}
 
 		public void UpdateImageRatio()
