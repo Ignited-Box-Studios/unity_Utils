@@ -25,4 +25,15 @@ namespace UnityUtils.DynamicScrollers
 		void Refresh();
 		void Clear();
 	}
+
+	public interface IScrollerCell<TData> : IScrollerCell
+		where TData : IScrollerCellData
+	{
+		Task<bool> IScrollerCell.SetData(IScrollerCellData data)
+		{
+			return data is TData _data ? SetData(_data) : Task.FromResult(false);
+		}
+
+		Task<bool> SetData(TData data);
+	}
 }
