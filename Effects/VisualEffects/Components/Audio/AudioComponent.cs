@@ -20,8 +20,18 @@ namespace UnityUtils.Effects.VisualEffects
 		private IAudioParameterFunctions audioFunctions;
 
 		public string Name => source.clip.name;
+		public AudioClip Clip 
+		{
+			get => source.clip;
+			set => source.clip = value;
+		}
+		public bool IsPlaying => source.isPlaying;
 		private IAudioParameterFunctions Functions => audioFunctions ?? functions;
 
+		public void Replay()
+		{
+			source.time = 0;
+		}
 		public void Play()
 		{
 			source.enabled = true;

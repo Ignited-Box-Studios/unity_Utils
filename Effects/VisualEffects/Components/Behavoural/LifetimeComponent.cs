@@ -11,7 +11,8 @@ namespace UnityUtils.Effects.VisualEffects
 		{
 			None,
 			Destroy,
-			Shrink
+			Shrink,
+			Stop
 		}
 
 		public string Name => nameof(LifetimeComponent);
@@ -43,8 +44,8 @@ namespace UnityUtils.Effects.VisualEffects
 		{
 			return action switch
 			{
-				Action.Destroy => DestroyAction(),
 				Action.Shrink => TweenScale(),
+				Action.Destroy or Action.Stop => DelayedAction(),
 				_ => NoneAction(),
 			};
 		}
@@ -52,11 +53,16 @@ namespace UnityUtils.Effects.VisualEffects
 		{
 			yield return new WaitForEndOfFrame();
 		}
-		private IEnumerator DestroyAction()
+		private IEnumerator DelayedAction()
 		{
 			yield return new WaitForSeconds(lifetime);
 			subject.Stop();
-			subject.Destroy();
+			switch (action)
+			{
+				case Action.Destroy:
+					subject.Destroy();
+					break;
+			}
 		}
 		private IEnumerator TweenScale()
 		{
