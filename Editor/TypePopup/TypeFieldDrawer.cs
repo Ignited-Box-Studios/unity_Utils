@@ -74,7 +74,7 @@ namespace UnityUtils.Serialization.TypePopup.Editor
 			if (_d != -1)
 				nameValue = nameValue[_d..];
 
-			return names.IndexOf(nameValue);
+			return Array.IndexOf(names, nameValue);
 		}
 	}
 }

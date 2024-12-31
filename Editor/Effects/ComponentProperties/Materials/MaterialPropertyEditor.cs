@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using Utilities.Collections;
-using Utils.Collections;
 using UnityUtils.Editor;
 using UnityUtils.RectUtils;
+using System;
 
 namespace UnityUtils.Effects.VisualEffects
 {
@@ -21,13 +21,13 @@ namespace UnityUtils.Effects.VisualEffects
 		private void UpdateProperties(Material mat)
 		{
 			this.mat = mat;
-			props = MaterialEditor.GetMaterialProperties(new Object[] { mat });
+			props = MaterialEditor.GetMaterialProperties(new UnityEngine.Object[] { mat });
 			names = props.Select(p => p.name).ToArray();
 		}
 
 		private void UpdateSelected(string name)
 		{
-			selected = names.IndexOf(name);
+			selected = Array.IndexOf(names, name);
 		}
 
 		protected override float DrawProperty(ref Rect position, SerializedProperty property, GUIContent label)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Utils.Collections;
+using Utilities.Collections;
 
 namespace UnityUtils.UI.Selectable.Groups
 {
