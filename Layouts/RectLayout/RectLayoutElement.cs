@@ -29,6 +29,13 @@ namespace UnityUtils.Layouts.RectLayout
 
 		protected virtual void OnSetEnabled(bool enabled) { }
 
+		[ContextMenu(nameof(ParentLayout))]
+		public void ParentLayout()
+		{
+			Rect source = (transform.parent as RectTransform).rect;
+			GetRectLayout(default, source, false);
+		}
+
 		public Rect GetRectLayout(Rect offset, Rect source, bool animate)
 		{
 			if (!isActiveAndEnabled)

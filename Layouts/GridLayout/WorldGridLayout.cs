@@ -117,17 +117,21 @@ namespace UnityUtils.Common.Layout
 			for (int i = 0; i < count; i++)
 			{
 				Transform child = transform.GetChild(i);
+				ChildLayout(i, child, count, spacing, grid);
+			}
+		}
 
-				Vector3Int gridPos = GetChildGridPosition(i, grid);
-				Vector3 pos = GetLocalPositionOfChild(gridPos, spacing, grid);
-				child.localPosition = pos;
+		protected virtual void ChildLayout(int i, Transform child, int count, Vector3 spacing, Vector3Int grid)
+		{
+			Vector3Int gridPos = GetChildGridPosition(i, grid);
+			Vector3 pos = GetLocalPositionOfChild(gridPos, spacing, grid);
+			child.localPosition = pos;
 
-				OnChildReloaded?.Invoke(child, pos, i, count);
-				if (child.TryGetComponent(out IWorldGridLayoutElement element))
-				{
-					LayoutElementInfo info = new LayoutElementInfo(i, gridPos, grid, GridSize, pos, spacing);
-					element.SetLayoutPosition(info);
-				}
+			OnChildReloaded?.Invoke(child, pos, i, count);
+			if (child.TryGetComponent(out IWorldGridLayoutElement element))
+			{
+				LayoutElementInfo info = new LayoutElementInfo(i, gridPos, grid, GridSize, pos, spacing);
+				element.SetLayoutPosition(info);
 			}
 		}
 
@@ -268,7 +272,7 @@ namespace UnityUtils.Common.Layout
 			return new Vector3Int(x, y, z);
 		}
 
-		public Vector3Int GetChildGridPosition(int i, Vector3Int grid)
+		public virtual Vector3Int GetChildGridPosition(int i, Vector3Int grid)
 		{
 			if (i < grid.x)
 				return new Vector3Int(i, 0, 0);
