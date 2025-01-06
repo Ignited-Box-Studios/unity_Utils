@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityUtils.Storages.EnumPairLists;
 
 namespace UnityUtils.UI.Selectable
 {
@@ -9,6 +10,7 @@ namespace UnityUtils.UI.Selectable
 		[SerializeField] protected Graphic front;
 		[SerializeField] private Graphic back;
 		[SerializeField] private Vector2 offset;
+		[SerializeField] private EnumPair<ButtonState, bool> isDown;
 
 		public ShadowedIconAnimation() { }
 		public ShadowedIconAnimation(IButtonAnimations poly) 
@@ -23,12 +25,8 @@ namespace UnityUtils.UI.Selectable
 
 		public virtual void DoStateTransition(ButtonState state, bool animate)
 		{
-			bool isPressed = state is ButtonState.Selected or ButtonState.GroupSelected
-				or ButtonState.Pressed or ButtonState.Highlighted;
-
-			//if (back) back.enabled = !isPressed;
+			bool isPressed = isDown[state];
 			if (!front) return;
-
 			front.rectTransform.localPosition = isPressed ? Vector3.zero : offset * back.rectTransform.rect.size;
 		}
 	}

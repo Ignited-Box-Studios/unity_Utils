@@ -14,7 +14,6 @@ namespace UnityUtils.UI.Selectable
 			base.DoStateTransition(state, animate);
 			if (!front) return;
 
-
 			front.color = state switch
 			{
 				ButtonState.Disabled => color * disabledMult,
