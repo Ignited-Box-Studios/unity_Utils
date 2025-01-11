@@ -25,9 +25,16 @@ namespace UnityUtils.UI.Selectable
 
 		public virtual void DoStateTransition(ButtonState state, bool animate)
 		{
-			bool isPressed = isDown[state];
-			if (!front) return;
-			front.rectTransform.localPosition = isPressed ? Vector3.zero : offset * back.rectTransform.rect.size;
+			try
+			{
+				bool isPressed = isDown[state];
+				if (!front) return;
+				front.rectTransform.localPosition = isPressed ? Vector3.zero : offset * back.rectTransform.rect.size;
+			}
+			catch (System.Exception e)
+			{
+				Debug.LogException(e, front.transform.parent.parent);
+			}
 		}
 	}
 }
