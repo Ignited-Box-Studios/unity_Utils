@@ -33,7 +33,7 @@ namespace UnityUtils.UI.Selectable
 			}
 			catch (System.Exception e)
 			{
-				Debug.LogException(e, front.transform.parent.parent);
+				Debug.LogException(e, front.transform.parent.parent.parent);
 			}
 		}
 	}
